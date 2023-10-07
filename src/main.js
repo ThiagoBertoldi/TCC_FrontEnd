@@ -9,7 +9,7 @@ import * as components from 'vuetify/components'
 import * as directives from 'vuetify/directives'
 import 'material-design-icons-iconfont/dist/material-design-icons.css'
 import { api } from './@api/api'
-import { fab } from './@fabricaComponente/fab'
+import { elementType } from './@fabricaComponente/elements'
 
 const app = createApp(App)
 
@@ -27,6 +27,6 @@ setInterval(() => {
 }, 5000)
 
 app.config.globalProperties.$api = api
-app.config.globalProperties.$fab = fab
+app.config.globalProperties.$element = elementType
 
 app.use(userStore).use(router).use(vuetify).mount('#app')

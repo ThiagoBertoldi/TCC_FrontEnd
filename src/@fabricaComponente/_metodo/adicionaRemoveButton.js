@@ -1,13 +1,5 @@
-function addEventRemoveElement(element) {
-   element.addEventListener('click', (e) => {
-      e.target.parentElement.remove()
-   })
-}
-
 export function addRemoveButton(element) {
    let removeButton = document.createElement('button');
-
-   addEventRemoveElement(removeButton)
 
    let removeBtn = removeButton.style
    removeBtn.right = '10px'
@@ -15,6 +7,10 @@ export function addRemoveButton(element) {
    removeBtn.cursor = 'pointer'
    removeBtn.position = 'absolute'
    removeBtn.fontSize = '20px'
+
+   removeButton.addEventListener('click', (e) => {
+      e.target.parentElement.remove()
+   })
    
    removeButton.addEventListener('mouseenter', () => {
       removeBtn.color = '#fff'

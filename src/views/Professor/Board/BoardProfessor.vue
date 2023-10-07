@@ -8,12 +8,12 @@
                   <v-col cols="12" class="d-flex align-center flex-column">
                      <h2>Componentes</h2>
                      <v-col>
-                        <v-card class="d-flex justify-center mt-4 pa-4" @click="insereComponente('text')">
+                        <v-card class="d-flex justify-center bg-orange mt-4 pa-4" @click="criarComponente('text')">
                            <p>Texto</p>
                         </v-card>
                      </v-col>
                      <v-col>
-                        <v-card class="d-flex justify-center pa-4" @click="insereComponente('imagem')">
+                        <v-card class="d-flex justify-center pa-4" @click="criarComponente('image')">
                            <p>Imagem</p>
                         </v-card>
                      </v-col>
@@ -28,7 +28,7 @@
                         </v-card>
                      </v-col>
                      <v-col>
-                        <v-card class="d-flex justify-center pa-4" @click="insereComponente('setaDireita')">
+                        <v-card class="d-flex bg-orange justify-center pa-4" @click="criarComponente('arrowRight')">
                            <p>Seta para Direita</p>
                         </v-card>
                      </v-col>
@@ -61,8 +61,10 @@ export default {
       }
    },
    methods: {
-      insereComponente(type) {
-         this.$fab.montarComponente(this.$refs.canvas.$el, type)
+      criarComponente(type) {
+         let canvas = this.$refs.canvas.$el
+
+         this.getElementMethods(type, canvas, null)
       },
       async salvarBoard() {
          let canvas = this.$refs.canvas.$el.querySelectorAll(".board-component")
@@ -156,6 +158,21 @@ export default {
          this.$api.post('save-board', dto)
             .then(() => { })
             .catch(err => { console.log(err) })
+      },
+      getElementMethods(type, canvas, element) {
+         switch(type) {
+            case 'text':
+               this.$element.TextComponent.createComponent(canvas, element)
+               break;
+            case 'arrowRight':
+               this.$element.ArrowRightComponent.createComponent(canvas, element)
+               break;
+            case 'image':
+               this.$element.ImageComponent.createComponent(canvas, element)
+               break;
+            default:
+               break;
+         }
       }
    },
    mounted() {
@@ -165,8 +182,8 @@ export default {
          .then(response => {
             let canvas = this.$refs.canvas.$el
 
-            response.data.response.map(item => {
-               this.$fab.insereComponentDOM(canvas, item)
+            response.data.response.map(element => {
+               this.getElementMethods(element.component.type, canvas, element)
             })
          })
          .catch(err => {})
