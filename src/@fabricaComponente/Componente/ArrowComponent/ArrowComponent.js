@@ -1,15 +1,22 @@
-import { addRemoveButton } from "../_metodo/adicionaRemoveButton"
-import { adicionaEfeitoArrastar } from "../_metodo/arrastaComponente"
+import { addRemoveButton } from "../../Metodo/removeButton"
+import { adicionaEfeitoArrastar } from "../../Metodo/draggableComponente"
 
-export const fabArrowRightComponent = {
-   createComponent(canvas, element) {
+export const fabArrowComponent = {
+   createComponent(canvas, element, side) {
       let div = document.createElement('div')
       let image = document.createElement('img')
 
       div.classList.add('board-component')
-      div.classList.add('board-component-arrowRight')
+      div.classList.add(`board-component-arrow${side}`)
 
-      image.setAttribute('src', './../../../arrowRight.png')
+      image.setAttribute('src', '../../../../arrow.png')
+
+      let rotate =
+         side == 'Left' ? '0'
+            : side == 'Up' ? '90'
+               : side == 'Right' ? '180' : '270'
+
+      image.style.transform = `rotate(${rotate}deg)`
 
       let style = div.style
       style.position = 'absolute'
@@ -17,7 +24,7 @@ export const fabArrowRightComponent = {
       style.left = `${element?.component?.posicaoY ?? 10}px`
 
       let styleImg = image.style
-      styleImg.width = '160px'
+      styleImg.width = '100px'
       styleImg.height = '80px'
 
       div.appendChild(image)

@@ -8,7 +8,7 @@
                   <v-col cols="12" class="d-flex align-center flex-column">
                      <h2>Componentes</h2>
                      <v-col>
-                        <v-card class="d-flex justify-center bg-orange mt-4 pa-4" @click="criarComponente('text')">
+                        <v-card class="d-flex justify-center mt-4 pa-4" @click="criarComponente('text')">
                            <p>Texto</p>
                         </v-card>
                      </v-col>
@@ -18,22 +18,22 @@
                         </v-card>
                      </v-col>
                      <v-col>
-                        <v-card class="d-flex justify-center pa-4" @click="insereComponente('setaBaixo')">
+                        <v-card class="d-flex justify-center pa-4" @click="criarComponente('arrowDown')">
                            <p>Seta para Baixo</p>
                         </v-card>
                      </v-col>
                      <v-col>
-                        <v-card class="d-flex justify-center pa-4" @click="insereComponente('setaCima')">
+                        <v-card class="d-flex justify-center pa-4" @click="criarComponente('arrowUp')">
                            <p>Seta para Cima</p>
                         </v-card>
                      </v-col>
                      <v-col>
-                        <v-card class="d-flex bg-orange justify-center pa-4" @click="criarComponente('arrowRight')">
+                        <v-card class="d-flex justify-center pa-4" @click="criarComponente('arrowRight')">
                            <p>Seta para Direita</p>
                         </v-card>
                      </v-col>
                      <v-col>
-                        <v-card class="d-flex justify-center pa-4" @click="insereComponente('setaEsquerda')">
+                        <v-card class="d-flex justify-center pa-4" @click="criarComponente('arrowLeft')">
                            <p>Seta para Esquerda</p>
                         </v-card>
                      </v-col>
@@ -80,11 +80,17 @@ export default {
             if (element.classList.contains('board-component-image'))
                endElement = await this.salvaImageComponent(element)
 
-            if(element.classList.contains('board-component-arrowRight'))
-               endElement = await this.salvaArrowRightComponent(element)
+            if (element.classList.contains('board-component-arrowRight'))
+               endElement = await this.salvaArrowComponent(element, 'Right')
 
-            if(element.classList.contains('board-component-arrowLeft'))
-               endElement = await this.salvaArrowLeftComponent(element)
+            if (element.classList.contains('board-component-arrowLeft'))
+               endElement = await this.salvaArrowComponent(element, 'Left')
+
+            if (element.classList.contains('board-component-arrowUp'))
+               endElement = await this.salvaArrowComponent(element, 'Up')
+
+            if (element.classList.contains('board-component-arrowDown'))
+               endElement = await this.salvaArrowComponent(element, 'Down')
 
             listElements.push(endElement)
          }
@@ -92,22 +98,12 @@ export default {
          let board = Object.assign(dto, { components: listElements })
          this.gravaComponentsBoard(board)
       },
-      async salvaArrowLeftComponent(element) {
+      async salvaArrowComponent(element, side) {
          let posicaoX = element.offsetTop;
          let posicaoY = element.offsetLeft;
-         
+
          return {
-            type: 'arrowLeft',
-            posicaoX,
-            posicaoY
-         }
-      },
-      async salvaArrowRightComponent(element) {
-         let posicaoX = element.offsetTop;
-         let posicaoY = element.offsetLeft;
-         
-         return {
-            type: 'arrowRight',
+            type: `arrow${side}`,
             posicaoX,
             posicaoY
          }
@@ -155,20 +151,27 @@ export default {
          })
       },
       gravaComponentsBoard(dto) {
-         this.$api.post('save-board', dto)
-            .then(() => { })
-            .catch(err => { console.log(err) })
+         this.$api.post('save-board', dto).finally(() => { })
       },
       getElementMethods(type, canvas, element) {
-         switch(type) {
+         switch (type) {
             case 'text':
                this.$element.TextComponent.createComponent(canvas, element)
                break;
-            case 'arrowRight':
-               this.$element.ArrowRightComponent.createComponent(canvas, element)
-               break;
             case 'image':
                this.$element.ImageComponent.createComponent(canvas, element)
+               break;
+            case 'arrowRight':
+               this.$element.ArrowComponent.createComponent(canvas, element, 'Right')
+               break;
+            case 'arrowLeft':
+               this.$element.ArrowComponent.createComponent(canvas, element, 'Left')
+               break;
+            case 'arrowUp':
+               this.$element.ArrowComponent.createComponent(canvas, element, 'Up')
+               break;
+            case 'arrowDown':
+               this.$element.ArrowComponent.createComponent(canvas, element, 'Down')
                break;
             default:
                break;
@@ -186,7 +189,7 @@ export default {
                this.getElementMethods(element.component.type, canvas, element)
             })
          })
-         .catch(err => {})
+         .catch(err => { })
    },
    components: {
       NavBar

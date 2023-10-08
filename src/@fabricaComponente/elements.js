@@ -1,9 +1,10 @@
-import { fabArrowRightComponent } from "./ArrowRightComponent/ArrowRightComponent";
-import { fabImageComponent } from "./ImageComponent/ImageComponent";
-import { fabTextComponent } from "./TextComponent/TextComponent";
+
+import { fabArrowComponent } from "./Componente/ArrowComponent/ArrowComponent";
+import { fabImageComponent } from "./Componente/ImageComponent/ImageComponent";
+import { fabTextComponent } from "./Componente/TextComponent/TextComponent";
 
 export const elementType = {
    TextComponent: fabTextComponent,
    ImageComponent: fabImageComponent,
-   ArrowRightComponent: fabArrowRightComponent
+   ArrowComponent: fabArrowComponent
 }

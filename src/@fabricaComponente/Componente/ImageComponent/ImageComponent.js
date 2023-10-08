@@ -1,5 +1,5 @@
-import { addRemoveButton } from "../_metodo/adicionaRemoveButton";
-import { adicionaEfeitoArrastar } from "../_metodo/arrastaComponente";
+import { addRemoveButton } from "../../Metodo/removeButton";
+import { adicionaEfeitoArrastar } from "../../Metodo/draggableComponente";
 
 export const fabImageComponent = {
    createComponent(canvas, element) {
@@ -33,8 +33,8 @@ export const fabImageComponent = {
       area.padding = '10px';
       area.border = '1px solid #3e3e3e'
       area.borderRadius = '10px';
-      area.top = element?.component?.posicaoX + 'px' ?? '25px' 
-      area.left = element?.component?.posicaoY + 'px' ?? '25px'
+      area.top = (element?.component?.posicaoX - 10) + 'px' ?? '25px' 
+      area.left = (element?.component?.posicaoY - 10 ) + 'px' ?? '25px'
       
       let stylesImage = imageElement.style
       stylesImage.maxWidth = '650px'
