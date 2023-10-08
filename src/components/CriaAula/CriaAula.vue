@@ -57,7 +57,9 @@ export default {
             nomeAula,
             conteudoAula,
             idMateria: id,
-            dataAula
+            dataAula,
+            posicaoX: 0,
+            posicaoY: 0
          }
 
          await this.$api.post('create-aula', newAula)

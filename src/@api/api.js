@@ -5,7 +5,7 @@ const api = {
    post: (controller, dto) => {
       return new Promise(async (resolve, reject) => {
          let token = userStore.getters?.getUser?.token ?? null
-
+      
          await axios.post(
             `http://localhost:3000/${controller}`,
             dto,

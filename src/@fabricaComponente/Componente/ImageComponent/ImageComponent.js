@@ -33,25 +33,18 @@ export const fabImageComponent = {
       area.padding = '10px';
       area.border = '1px solid #3e3e3e'
       area.borderRadius = '10px';
-      area.top = (element?.component?.posicaoX - 10) + 'px' ?? '25px' 
-      area.left = (element?.component?.posicaoY - 10 ) + 'px' ?? '25px'
-      
+      area.top = (element?.component?.posicaoX - 10) + 'px' ?? '25px'
+      area.left = (element?.component?.posicaoY - 10) + 'px' ?? '25px'
+
       let stylesImage = imageElement.style
       stylesImage.maxWidth = '650px'
       stylesImage.maxHeight = '380px'
-      
-      buttonAddImage.addEventListener('change', function (event) {
-         const selectedFile = event.target.files[0];
-         
-         if (selectedFile)
-         imageElement.src = URL.createObjectURL(selectedFile);
-         
-         event.target.value = '';
-      })
+
+      this.changeImage(buttonAddImage, imageElement)
 
       areaElement.appendChild(buttonAddImage)
       areaElement.appendChild(imageElement)
-   
+
       this.addElementCanvas(canvas, areaElement)
    },
    addElementCanvas(canvas, element) {
@@ -59,5 +52,15 @@ export const fabImageComponent = {
       adicionaEfeitoArrastar(element)
 
       canvas.appendChild(element)
+   },
+   changeImage(buttonElement, imageElement) {
+      buttonElement.addEventListener('change', function (event) {
+         const selectedFile = event.target.files[0];
+
+         if (selectedFile)
+            imageElement.src = URL.createObjectURL(selectedFile);
+
+         event.target.value = '';
+      })
    }
 }

@@ -21,11 +21,7 @@
          </v-row>
       </div>
 
-      <v-snackbar
-         v-model="snackbar"
-         :timeout="3000"
-         :color="snackbar_success ? 'green' : 'red'"
-      >
+      <v-snackbar v-model="snackbar" :timeout="3000" :color="snackbar_success ? 'green' : 'red'">
          {{ snackbar_message }}
       </v-snackbar>
    </div>
@@ -53,20 +49,22 @@ export default {
       },
       async buscaMaterias() {
          await this.$api.get('get-materias', {})
-         .then(response => { 
-            this.materias = response.data
-         })
-         .catch(err => {
-            this.snackbar = true
-            this.snackbar_message = err.response.data.data.message
-            setTimeout(() => this.$router.back(), 1500)
-         })
+            .then(response => {
+               this.materias = response.data
+            })
+            .catch(err => {
+               this.snackbar = true
+               this.snackbar_message = err.response.data.data.message
+               setTimeout(() => this.$router.back(), 1500)
+            })
       },
       goToAulaProfessor(id_materia) {
-         if(!id_materia)
+         if (!id_materia)
             return;
-         
-         this.$router.push({ name: 'AulaProfessor', params: { id: id_materia } })
+
+         let params = { id: id_materia }
+
+         this.$router.push({ name: 'AulaProfessor', params })
       }
    },
    async mounted() {

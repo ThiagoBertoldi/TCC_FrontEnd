@@ -1,76 +1,134 @@
 <template>
    <div>
-      <NavBar @atualizaPagina="atualizaPagina" :routes="rotasNavBar" />
-      <div>
-         <v-row class="ma-4">
-            <template v-if="aulas instanceof Array" v-for="aula in aulas">
-               <v-col xs="12" sm="6" md="4" lg="2" xl="1">
-                  <v-card class="card-materia" @click="goToBoardProfessor(aula.idBoard)">
-                     <v-card-title>
-                        {{ aula.nomeAula }}
-                     </v-card-title>
-                     <v-card-text>
-                        {{ aula.conteudoAula }}
-                     </v-card-text>
-                     <v-card-text>
-                        Data da aula: {{ formataData(aula.dataAula) }}
-                     </v-card-text>
-                     <v-card-text>
-                        Criado em: {{ formataData(aula.created_at) }}
-                     </v-card-text>
-                  </v-card>
-               </v-col>
-            </template>
-         </v-row>
-      </div>
+      <NavBar @atualizaPagina="atualizaPagina" @salvarAula="salvarAula" :routes="rotasNavBar" />
+      <input class="btn-troca-bg" type="file" @change="getImage" />
+      <div class="canvas" :style="{ backgroundImage: 'url(' + classBg + ')', backgroundSize: '100% 100%' }"></div>
    </div>
 </template>
 
 <script>
+import { adicionaEfeitoArrastar } from '@/@fabricaComponente/Metodo/draggableComponente'
 import NavBar from '@/components/NavBar/NavBar.vue'
 
 export default {
    data() {
       return {
-         aulas: [],
          rotasNavBar: {
-            home: true, 
-            cadastrarAula: true
-         }
+            home: true,
+            cadastrarAula: true,
+            classSave: true
+         },
+         classBg: null,
+         montado: false
       }
    },
    methods: {
       buscaAulas(id) {
          this.$api.get('get-aulas', { id })
-         .then(response => {
-            this.aulas = response.data ?? []
-         })
-         .catch(err => {})
+            .then(response => {
+               if(response.data instanceof Array) {
+                  response.data.map((aula, index) => {
+                     this.criaElementClass(index, aula)
+                  })
+
+                  this.setBackground()
+               }
+            })
+            .catch(err => { })
       },
       atualizaPagina() {
          const { id } = this.$route.params
 
          this.buscaAulas(id)
       },
-      goToBoardProfessor(idBoard) {
-         if(!idBoard)
-            return;
-         
-         this.$router.push({ name: 'BoardProfessor', params: { id: idBoard } })
+      getImage(event) {
+         let file = event.target.files[0];
+
+         if (file) {
+            const reader = new FileReader();
+
+            reader.onload = () => {
+               let canvas = document.querySelector('.canvas')
+
+               while (canvas.firstChild)
+                  canvas.removeChild(canvas.firstChild);
+
+               this.classBg = reader.result;
+            }
+            reader.readAsDataURL(file);
+         }
       },
-      formataData(data) {
-         let newDate = new Date(data)
+      async setBackground() {
+         let canvas = document.querySelector('.canvas')
 
-         let dia = newDate.getDate()
-         let invalidMonth = newDate.getMonth() + 1
-         let mes = invalidMonth.toString().length == 1 
-            ? `0${invalidMonth}` 
-            : invalidMonth
-         let ano = newDate.getFullYear()
-         let hora = newDate.getHours()
-         let minute = newDate.getMinutes()
+         let dto = { idMateria: this.$route.params.id }
 
-         return `${dia}/${mes}/${ano} - ${hora}:${minute}`
+         await this.$api.post('get-background', dto)
+         .then(response => {
+            canvas.style.backgroundImage = `url('${response.data.backgroundBase64}')`
+         })
+         .catch(err => console.log(err))
+      },
+      criaElementClass(num, aula) {
+         let canvas = document.querySelector('.canvas')
+
+         let element = document.createElement('div')
+         element.classList.add('class-component')
+         element.setAttribute('id_aula', aula._id)
+         let style = element.style
+         style.width = '50px'
+         style.height = '50px'
+         style.backgroundColor = 'green'
+         style.borderRadius = '25px'
+         style.display = 'flex'
+         style.justifyContent = 'center'
+         style.alignItems = 'center'
+         style.position = 'absolute'
+         style.left = `${aula?.posicaoX ?? 0}px`
+         style.top = `${aula?.posicaoY ?? 0}px`
+
+         let numElement = document.createElement('p')
+         numElement.innerText = num + 1
+
+         element.appendChild(numElement)
+
+         element.addEventListener('dblclick', () => this.$router.push({ name: 'BoardProfessor', params: { id: aula.idBoard } }))
+         adicionaEfeitoArrastar(element)
+
+         canvas.appendChild(element)
+      },
+      async salvarAula() {
+         let canvas = document.querySelector('.canvas')
+         let elements = canvas.querySelectorAll('[id_aula]')
+
+         let elementsSave = []
+
+         for await (var element of elements) {
+            let id_aula = element.getAttribute('id_aula')
+            let posicaoX = element.offsetLeft
+            let posicaoY = element.offsetTop
+
+            let dto = {
+               id_aula,
+               posicaoX,
+               posicaoY
+            }
+
+            elementsSave.push(dto)
+         }
+
+         let backgroundBase64 = window.getComputedStyle(canvas).backgroundImage.replace('url("', '').replace('")', '') ?? null
+
+         let dto = {
+            elementsSave,
+            backgroundBase64,
+            id_materia: this.$route.params.id
+         }
+
+         this.$api.post('salva-aulas', dto)
+         .then(resp => console.log(resp))
+         .catch(err => console.log(err))
+
       }
    },
    mounted() {
@@ -83,3 +141,15 @@ export default {
    }
 }
 </script>
+
+<style scoped>
+.canvas {
+   height: calc(100vh - 68px);
+}
+
+.btn-troca-bg {
+   position: absolute;
+   right: 16px;
+   top: 84px;
+}
+</style>

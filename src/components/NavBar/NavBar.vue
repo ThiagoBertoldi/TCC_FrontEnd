@@ -17,6 +17,11 @@
                   Salvar
                </v-btn>
             </div>
+            <div v-if="routes?.classSave">
+               <v-btn color="green" @click="salvarAula">
+                  Salvar
+               </v-btn>
+            </div>
          </div>
       </nav>
    </div>
@@ -63,6 +68,9 @@ export default {
       },
       salvarBoard() {
          this.$emit('salvarBoard', null)
+      },
+      salvarAula(){
+         this.$emit('salvarAula', null)
       }
    },
    props: {
@@ -72,6 +80,6 @@ export default {
       CriaMateria,
       CriaAula
    },
-   emits: [ 'atualizaPagina', 'salvarBoard' ]
+   emits: [ 'atualizaPagina', 'salvarBoard', 'salvarAula' ]
 }
 </script>
