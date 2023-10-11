@@ -12,6 +12,9 @@
             <div v-if="routes?.cadastrarAula" @click="openCriaAula">
                Criar Aula
             </div>
+            <div v-if="routes?.cadastraQuestao" @click="openCriaQuestao">
+               Criar Questão
+            </div>
             <div v-if="routes?.boardSave">
                <v-btn color="green" @click="salvarBoard">
                   Salvar
@@ -22,14 +25,29 @@
                   Salvar
                </v-btn>
             </div>
+            <div v-if="routes?.deleteBoard">
+               <v-btn color="red" @click="deleteBoard">
+                  Deletar
+               </v-btn>
+            </div>
          </div>
       </nav>
    </div>
-   <CriaMateria @success_snackbar="setMessageSnackBar" @error_snackbar="setMessageSnackBar"
-      @atualizaPagina="atualizaPagina" ref="criarMateria" />
+   <CriaMateria 
+      @success_snackbar="setMessageSnackBar" 
+      @error_snackbar="setMessageSnackBar"
+      @atualizaPagina="atualizaPagina" 
+      ref="criarMateria" />
 
    <CriaAula @success_snackbar="setMessageSnackBar" @error_snackbar="setMessageSnackBar" @atualizaPagina="atualizaPagina"
       ref="criaAula" />
+
+   <CriarQuestao
+      ref="criaQuestao"
+      @success_snackbar="setMessageSnackBar" 
+      @error_snackbar="setMessageSnackBar"
+      @atualizaPagina="atualizaPagina" 
+   />
 
    <v-snackbar v-model="snackbar" :timeout="3000" :color="snackbar_success ? 'green' : 'red'">
       {{ snackbar_message }}
@@ -39,6 +57,7 @@
 <script>
 import CriaMateria from '../CriaMateria/CriaMateria.vue'
 import CriaAula from '../CriaAula/CriaAula.vue'
+import CriarQuestao from '../CriarQuestao/CriarQuestao.vue'
 
 export default {
    data() {
@@ -58,6 +77,9 @@ export default {
       openCriaAula() {
          this.$refs.criaAula.openModal()
       },
+      openCriaQuestao() {
+         this.$refs.criaQuestao.openModal()
+      },
       setMessageSnackBar(message, success) {
          this.snackbar = true
          this.snackbar_success = success
@@ -71,6 +93,9 @@ export default {
       },
       salvarAula(){
          this.$emit('salvarAula', null)
+      },
+      deleteBoard() {
+         this.$emit('confirmDeleteBoard', null)
       }
    },
    props: {
@@ -78,8 +103,9 @@ export default {
    },
    components: {
       CriaMateria,
-      CriaAula
+      CriaAula,
+      CriarQuestao
    },
-   emits: [ 'atualizaPagina', 'salvarBoard', 'salvarAula' ]
+   emits: [ 'atualizaPagina', 'salvarBoard', 'salvarAula', 'deleteBoard' ]
 }
 </script>

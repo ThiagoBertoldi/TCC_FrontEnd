@@ -1,6 +1,7 @@
 <template>
    <div>
-      <NavBar @salvarBoard="salvarBoard" :routes="rotasNavBar" />
+      <ConfirmDialog ref="deleteBoard" @confirmDeleteBoard="deleteBoard" />
+      <NavBar @salvarBoard="salvarBoard" @confirmDeleteBoard="confirmDeleteBoard" :routes="rotasNavBar" />
       <div>
          <v-row class="ma-2">
             <v-col cols="2">
@@ -50,13 +51,15 @@
 
 <script>
 import NavBar from '@/components/NavBar/NavBar.vue';
+import ConfirmDialog from '../../../components/ConfirmMessage/Confirmation.vue'
 
 export default {
    data() {
       return {
          rotasNavBar: {
             home: true,
-            boardSave: true
+            boardSave: true,
+            deleteBoard: true
          }
       }
    },
@@ -97,6 +100,18 @@ export default {
 
          let board = Object.assign(dto, { components: listElements })
          this.gravaComponentsBoard(board)
+      },
+      async confirmDeleteBoard() {
+         this.$refs.deleteBoard.openModal()
+      },
+      async deleteBoard() {
+         let idBoard = this.$route.params.id
+
+         this.$api.post('delete-board', { idBoard })
+         .then(() => {
+            this.$router.back()
+         })
+         .catch(err => console.log(err))
       },
       async salvaArrowComponent(element, side) {
          let posicaoX = element.offsetTop;
@@ -192,7 +207,8 @@ export default {
          .catch(err => { })
    },
    components: {
-      NavBar
+      NavBar,
+      ConfirmDialog
    }
 }
 </script>

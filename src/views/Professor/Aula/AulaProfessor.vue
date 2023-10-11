@@ -3,12 +3,16 @@
       <NavBar @atualizaPagina="atualizaPagina" @salvarAula="salvarAula" :routes="rotasNavBar" />
       <input class="btn-troca-bg" type="file" @change="getImage" />
       <div class="canvas" :style="{ backgroundImage: 'url(' + classBg + ')', backgroundSize: '100% 100%' }"></div>
+      <CriarQuestao 
+         ref="attQuestao"
+      />
    </div>
 </template>
 
 <script>
 import { adicionaEfeitoArrastar } from '@/@fabricaComponente/Metodo/draggableComponente'
 import NavBar from '@/components/NavBar/NavBar.vue'
+import CriarQuestao from '@/components/CriarQuestao/CriarQuestao.vue'
 
 export default {
    data() {
@@ -16,6 +20,7 @@ export default {
          rotasNavBar: {
             home: true,
             cadastrarAula: true,
+            cadastraQuestao: true,
             classSave: true
          },
          classBg: null,
@@ -78,7 +83,8 @@ export default {
          let style = element.style
          style.width = '50px'
          style.height = '50px'
-         style.backgroundColor = 'green'
+         style.backgroundColor = aula.tipoAula == 1 ? 'blue' : 'orange'
+         style.color = '#fff'
          style.borderRadius = '25px'
          style.display = 'flex'
          style.justifyContent = 'center'
@@ -92,7 +98,12 @@ export default {
 
          element.appendChild(numElement)
 
-         element.addEventListener('dblclick', () => this.$router.push({ name: 'BoardProfessor', params: { id: aula.idBoard } }))
+         if(aula.tipoAula === 1) {
+            element.addEventListener('dblclick', () => this.$router.push({ name: 'BoardProfessor', params: { id: aula.idBoard } }))
+         } else {
+            element.addEventListener('dblclick', () => this.$refs.attQuestao.openModal(aula))
+         }
+
          adicionaEfeitoArrastar(element)
 
          canvas.appendChild(element)
@@ -137,7 +148,8 @@ export default {
       this.buscaAulas(id)
    },
    components: {
-      NavBar
+      NavBar,
+      CriarQuestao
    }
 }
 </script>
