@@ -58,9 +58,7 @@
 export default {
    data() {
       return {
-         model: {
-
-         },
+         model: {},
          typeButton: false,
          show: false,
          listaRespostas: []

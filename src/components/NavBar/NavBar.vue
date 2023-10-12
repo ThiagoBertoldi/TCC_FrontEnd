@@ -15,6 +15,9 @@
             <div v-if="routes?.cadastraQuestao" @click="openCriaQuestao">
                Criar Questão
             </div>
+            <div v-if="routes?.mercadoAula" @click="openMercado">
+               Mercado
+            </div>
             <div v-if="routes?.boardSave">
                <v-btn color="green" @click="salvarBoard">
                   Salvar
@@ -44,9 +47,10 @@
 
    <CriarQuestao
       ref="criaQuestao"
-      @success_snackbar="setMessageSnackBar" 
-      @error_snackbar="setMessageSnackBar"
-      @atualizaPagina="atualizaPagina" 
+   />
+
+   <MercadoAula
+      ref="mercadoAula"
    />
 
    <v-snackbar v-model="snackbar" :timeout="3000" :color="snackbar_success ? 'green' : 'red'">
@@ -58,6 +62,7 @@
 import CriaMateria from '../CriaMateria/CriaMateria.vue'
 import CriaAula from '../CriaAula/CriaAula.vue'
 import CriarQuestao from '../CriarQuestao/CriarQuestao.vue'
+import MercadoAula from '../Mercado/MercadoAula.vue'
 
 export default {
    data() {
@@ -69,7 +74,7 @@ export default {
    },
    methods: {
       goToHome() {
-
+         
       },
       openCriaMateria() {
          this.$refs.criarMateria.openModal()
@@ -79,6 +84,9 @@ export default {
       },
       openCriaQuestao() {
          this.$refs.criaQuestao.openModal()
+      },
+      openMercado() {
+         this.$refs.mercadoAula.openModal()
       },
       setMessageSnackBar(message, success) {
          this.snackbar = true
@@ -104,8 +112,9 @@ export default {
    components: {
       CriaMateria,
       CriaAula,
-      CriarQuestao
+      CriarQuestao,
+      MercadoAula
    },
-   emits: [ 'atualizaPagina', 'salvarBoard', 'salvarAula', 'deleteBoard' ]
+   emits: [ 'atualizaPagina', 'salvarBoard', 'salvarAula', 'deleteBoard', 'salvaMercado' ]
 }
 </script>

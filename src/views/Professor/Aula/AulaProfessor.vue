@@ -21,6 +21,7 @@ export default {
             home: true,
             cadastrarAula: true,
             cadastraQuestao: true,
+            mercadoAula: true,
             classSave: true
          },
          classBg: null,
@@ -53,11 +54,6 @@ export default {
             const reader = new FileReader();
 
             reader.onload = () => {
-               let canvas = document.querySelector('.canvas')
-
-               while (canvas.firstChild)
-                  canvas.removeChild(canvas.firstChild);
-
                this.classBg = reader.result;
             }
             reader.readAsDataURL(file);
@@ -129,10 +125,10 @@ export default {
          }
 
          let backgroundBase64 = window.getComputedStyle(canvas).backgroundImage.replace('url("', '').replace('")', '') ?? null
-
+         
          let dto = {
             elementsSave,
-            backgroundBase64,
+            backgroundBase64: this.classBg ?? backgroundBase64,
             id_materia: this.$route.params.id
          }
 
