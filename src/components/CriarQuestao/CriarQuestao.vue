@@ -12,14 +12,24 @@
                </v-col>
             </v-row>
             <v-card-text>
-               <template v-for="(questao, index) in listaRespostas" :key="questao">
-                  <div class="d-flex">
-                     <v-col cols="2">
-                        <v-checkbox v-model="model.respostaCorreta" color="red" :value="questao.desc"
-                           hide-details></v-checkbox>
+               <template v-for="(resposta, index) in listaRespostas" :key="resposta">
+                  <div class="d-flex justify-center align-center">
+                     <v-col cols="1" class="d-flex align-center">
+                        <v-icon :style="{ cursor: 'pointer' }" @click="removerResposta(resposta)">
+                           <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="100" height="100"
+                              viewBox="0 0 30 30">
+                              <path
+                                 d="M 14.984375 2.4863281 A 1.0001 1.0001 0 0 0 14 3.5 L 14 4 L 8.5 4 A 1.0001 1.0001 0 0 0 7.4863281 5 L 6 5 A 1.0001 1.0001 0 1 0 6 7 L 24 7 A 1.0001 1.0001 0 1 0 24 5 L 22.513672 5 A 1.0001 1.0001 0 0 0 21.5 4 L 16 4 L 16 3.5 A 1.0001 1.0001 0 0 0 14.984375 2.4863281 z M 6 9 L 7.7929688 24.234375 C 7.9109687 25.241375 8.7633438 26 9.7773438 26 L 20.222656 26 C 21.236656 26 22.088031 25.241375 22.207031 24.234375 L 24 9 L 6 9 z">
+                              </path>
+                           </svg>
+                        </v-icon>
+                     </v-col>
+                     <v-col cols="1">
+                        <input type="checkbox" v-model="resposta.respostaCorreta" hide-details />
                      </v-col>
                      <v-col cols="10">
-                        <v-text-field :label="questao.id" variant="outlined" v-model="model[questao.desc]" />
+                        <v-text-field :label="'Resposta ' + (index + 1)" variant="outlined" v-model="resposta.descricao"
+                           hide-details />
                      </v-col>
                   </div>
                </template>
@@ -28,7 +38,7 @@
          <v-card-text>
             <v-row>
                <v-col class="d-flex">
-                  <v-btn color="blue" class="flex-grow-1" @click="addQuestao">
+                  <v-btn color="blue" class="flex-grow-1" @click="addResposta">
                      Adicionar Resposta
                   </v-btn>
                </v-col>
@@ -47,7 +57,7 @@
                Voltar
             </v-btn>
             <v-btn color="green" variant="text" @click="salvaQuestao">
-               {{ typeButton ? 'Salvar' : 'Criar' }}
+               Salvar
             </v-btn>
          </v-card-actions>
       </v-card>
@@ -69,95 +79,70 @@ export default {
          this.model = {}
          this.listaRespostas = []
 
-         if(sender) {
+         if (sender) {
             this.typeButton = true
 
             this.$api.get('get-questao', { idAula: sender._id })
-            .then(response => {
-               this.model = {
-                  idAula: sender._id,
-                  descricaoQuestao: response.data.descricaoQuestao,
-                  moedas: response.data.moedas,
-                  respostaCorreta: response.data.respostaCorreta
-               }
+               .then(response => {
+                  console.log("SNJSDFJDSNKFJSDFKSDNFKSJNDKFJSNKDFJS", response)
 
-               const { resposta1, resposta2, resposta3, resposta4, resposta5 } = response.data
+                  this.model = {
+                     idAula: sender._id,
+                     descricaoQuestao: response.data.descricaoQuestao,
+                     moedas: response.data.moedas
+                  }
 
-               if(resposta1) {
-                  this.listaRespostas.push({ desc: 'resposta1', id: 'Questão 1' })
-                  this.model['resposta1'] = resposta1
-               }
+                  response.data.listaRespostas.map(item => {
+                     this.listaRespostas.push({ descricao: item.descricao, respostaCorreta: item.respostaCorreta })
+                  })
 
-               if(resposta2) {
-                  this.listaRespostas.push({ desc: 'resposta2', id: 'Questão 2' })
-                  this.model['resposta2'] = resposta2
-               }
-
-               if(resposta3) {
-                  this.listaRespostas.push({ desc: 'resposta3', id: 'Questão 3' })
-                  this.model['resposta3'] = resposta3
-               }
-
-               if(resposta4) {
-                  this.listaRespostas.push({ desc: 'resposta4', id: 'Questão 4' })
-                  this.model['resposta4'] = resposta4
-               }
-
-               if(resposta5) {
-                  this.listaRespostas.push({ desc: 'resposta5', id: 'Questão 5' })
-                  this.model['resposta5'] = resposta5
-               }
-
-               this.show = true;
-            })
-            .catch(err => console.log(err))
+                  this.show = true;
+               })
+               .catch(err => console.log(err))
          } else {
             this.show = true
          }
 
       },
-      addQuestao() {
+      addResposta() {
          if (this.listaRespostas.length >= 5)
             return
 
-         this.listaRespostas.push({ desc: `resposta${this.listaRespostas.length + 1}`, id: 'Questão ' + (this.listaRespostas.length + 1) })
+         this.listaRespostas.push({ respostaCorreta: false, descricao: '' })
+      },
+      removerResposta(resposta) {
+         let indexResposta = this.listaRespostas.indexOf(resposta)
+
+         if(indexResposta > -1)
+            this.listaRespostas.splice(indexResposta, 1)
       },
       async salvaQuestao() {
-         let { descricaoQuestao, respostaCorreta, moedas, idAula } = this.model
-         const { id } = this.$route.params
+         let { descricaoQuestao, moedas, idAula } = this.model
 
          moedas = parseFloat(moedas)
 
-         if(!respostaCorreta || !descricaoQuestao)
-            return
-
-         if(!this.model['resposta1'] || !this.model['resposta2'])
+         if (!descricaoQuestao || this.listaRespostas.length <= 1)
             return
 
          let dto = {
             idAula: idAula ?? null,
             descricaoQuestao,
-            respostaCorreta,
-            resposta1: this.model['resposta1'] ?? null,
-            resposta2: this.model['resposta2'] ?? null,
-            resposta3: this.model['resposta3'] ?? null,
-            resposta4: this.model['resposta4'] ?? null,
-            resposta5: this.model['resposta5'] ?? null,
+            listaRespostas: this.listaRespostas,
             idMateria: this.$route.params.id,
             moedas: isNaN(moedas) ? 0 : moedas
          }
 
-         this.typeButton ? this.salvaExistente(dto) : this.criarQuestao(dto) 
+         this.typeButton ? this.salvaExistente(dto) : this.criarQuestao(dto)
       },
       criarQuestao(dto) {
          this.$api.post('create-questao', dto)
-         .then(resp => console.log(resp))
-         .catch(err => console.log(err))
+            .then(resp => console.log(resp))
+            .catch(err => console.log(err))
       },
       salvaExistente(dto) {
          this.$api.post('update-questao', dto)
-         .then(resp => console.log(resp))
-         .catch(err => console.log(err))
+            .then(resp => console.log(resp))
+            .catch(err => console.log(err))
       }
    }
 }
