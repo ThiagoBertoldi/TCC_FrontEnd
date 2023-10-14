@@ -33,6 +33,9 @@
                   Deletar
                </v-btn>
             </div>
+            <div v-if="routes?.perfilProfessor" @click="goToPerfil">
+               Perfil
+            </div>
          </div>
       </nav>
    </div>
@@ -74,7 +77,10 @@ export default {
    },
    methods: {
       goToHome() {
-         
+         this.$router.push('/home-professor')
+      },
+      goToPerfil() {
+         this.$router.push('/perfil-professor')
       },
       openCriaMateria() {
          this.$refs.criarMateria.openModal()

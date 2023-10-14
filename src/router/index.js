@@ -6,6 +6,7 @@ import HomeAluno from '../views/Aluno/Home/HomeAluno.vue'
 import userStore from '@/store/userStore'
 import AulaProfessor from '../views/Professor/Aula/AulaProfessor.vue'
 import BoardProfessor from '../views/Professor/Board/BoardProfessor.vue'
+import PerfilProfessor from '../views/Professor/Perfil/Perfil.vue'
 
 const routes = [
   {
@@ -40,6 +41,15 @@ const routes = [
     path: '/board-professor/:id',
     name: 'BoardProfessor',
     component: BoardProfessor,
+    meta: {
+      requiresAuth: true,
+      typeUser: 1
+    }
+  },
+  {
+    path: '/perfil-professor',
+    name: 'PerfilProfessor',
+    component: PerfilProfessor,
     meta: {
       requiresAuth: true,
       typeUser: 1

@@ -35,7 +35,8 @@ export default {
       return {
          user: null,
          rotasNavBar: {
-            cadastrarMateria: true
+            cadastrarMateria: true,
+            perfilProfessor: true
          },
          materias: [],
          snackbar: false,
