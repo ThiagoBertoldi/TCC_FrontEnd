@@ -36,6 +36,9 @@
             <div v-if="routes?.perfilProfessor" @click="goToPerfil">
                Perfil
             </div>
+            <div v-if="routes?.cadastraAluno" @click="openCadastraAluno">
+               Cadastrar Aluno
+            </div>
          </div>
       </nav>
    </div>
@@ -56,6 +59,10 @@
       ref="mercadoAula"
    />
 
+   <CadastraAluno
+      ref="cadastraAluno"
+   />
+
    <v-snackbar v-model="snackbar" :timeout="3000" :color="snackbar_success ? 'green' : 'red'">
       {{ snackbar_message }}
    </v-snackbar>
@@ -66,6 +73,7 @@ import CriaMateria from '../CriaMateria/CriaMateria.vue'
 import CriaAula from '../CriaAula/CriaAula.vue'
 import CriarQuestao from '../CriarQuestao/CriarQuestao.vue'
 import MercadoAula from '../Mercado/MercadoAula.vue'
+import CadastraAluno from '../CadastraAluno/CadastraAluno.vue'
 
 export default {
    data() {
@@ -90,6 +98,9 @@ export default {
       },
       openCriaQuestao() {
          this.$refs.criaQuestao.openModal()
+      },
+      openCadastraAluno() {
+         this.$refs.cadastraAluno.openModal()
       },
       openMercado() {
          this.$refs.mercadoAula.openModal()
@@ -119,7 +130,8 @@ export default {
       CriaMateria,
       CriaAula,
       CriarQuestao,
-      MercadoAula
+      MercadoAula,
+      CadastraAluno
    },
    emits: [ 'atualizaPagina', 'salvarBoard', 'salvarAula', 'deleteBoard', 'salvaMercado' ]
 }
