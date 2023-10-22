@@ -1,9 +1,27 @@
 <template>
    <div>
-      <NavBar @atualizaPagina="atualizaPagina" :routes="rotasNavBar" />
-      <h1>Aluno</h1>
-      <div>{{ user?.username ?? 'User não logado' }}</div>
-      {{ this.$store.getters.getUser }}
+      <NavBar :routes="rotasNavBar" />
+      
+      <div>
+         <v-row class="ma-4">
+            <template v-for="materia in materias">
+               <v-col xs="12" sm="6" md="4" lg="2" xl="1">
+                  <v-card class="card-materia" @click="goToMateriaAluno(materia._id)">
+                     <v-card-title>
+                        {{ materia.nomeMateria }}
+                     </v-card-title>
+                     <v-card-subtitle>
+                        {{ materia.turma }}
+                     </v-card-subtitle>
+                     <v-card-text>
+                        {{ new Date(materia.created_at).toLocaleDateString('pt-BR') }}
+                     </v-card-text>
+                  </v-card>
+               </v-col>
+            </template>
+         </v-row>
+      </div>
+      
    </div>
 </template>
 
@@ -16,18 +34,28 @@ export default {
          user: null,
          rotasNavBar: {
             perfil: true
-         }
+         },
+         materias: []
       }
    },
    methods: {
-      atualizaPagina() {
+      goToMateriaAluno(id_materia) {
+         if (!id_materia)
+            return;
 
+         let params = { id: id_materia }
+
+         this.$router.push({ name: 'AulaAluno', params })
       }
    },
    mounted() {
       this.user = this.$store.getters.getUser
 
-      this.$api.post('busca-aulas-aluno', { alunoId: this.user })
+      this.$api.get('get-materias-aluno', {})
+      .then(response => {
+         this.materias = response.data
+      })
+      .catch(err => { console.log(err) })
    },
    components: {
       NavBar

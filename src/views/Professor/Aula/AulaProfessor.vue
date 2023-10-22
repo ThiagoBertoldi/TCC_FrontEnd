@@ -31,7 +31,7 @@ export default {
    },
    methods: {
       buscaAulas(id) {
-         this.$api.get('get-aulas', { id })
+         this.$api.get('get-aulas', { idMateria: id })
             .then(response => {
                if(response.data instanceof Array) {
                   response.data.map((aula, index) => {

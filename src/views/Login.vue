@@ -52,8 +52,8 @@ export default {
    data() {
       return {
          model: {
-            email: 'thiago.bertoldi@gmail.com',
-            pass: '12345678'
+            email: 'thiago.bertoldi1@gmail.com',
+            pass: '@login1234'
          },
          snackbar: false,
          error: null

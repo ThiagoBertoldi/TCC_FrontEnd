@@ -7,6 +7,7 @@ import userStore from '@/store/userStore'
 import AulaProfessor from '../views/Professor/Aula/AulaProfessor.vue'
 import BoardProfessor from '../views/Professor/Board/BoardProfessor.vue'
 import PerfilProfessor from '../views/Professor/Perfil/Perfil.vue'
+import AulaAluno from '../views/Aluno/Aula/AulaAluno.vue'
 
 const routes = [
   {
@@ -59,6 +60,15 @@ const routes = [
     path: '/home-aluno',
     name: 'HomeAluno',
     component: HomeAluno,
+    meta: {
+      requiresAuth: true,
+      typeUser: 2
+    }
+  },
+  {
+    path: '/aula-aluno/:id',
+    name: 'AulaAluno',
+    component: AulaAluno,
     meta: {
       requiresAuth: true,
       typeUser: 2

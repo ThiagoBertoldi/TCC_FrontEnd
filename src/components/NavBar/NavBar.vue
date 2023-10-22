@@ -42,7 +42,8 @@
             <div v-if="routes?.perfilProfessor && this.$store.getters.getUser.type == 1" @click="goToPerfil">
                Perfil
             </div>
-            <div v-if="routes?.perfil && this.$store.getters.getUser.type == 2" @click="goToHomeAluno">
+
+            <div v-if="routes?.homeAluno && this.$store.getters.getUser.type == 2" @click="goToHomeAluno">
                Home
             </div>
          </div>
@@ -100,6 +101,9 @@ export default {
    methods: {
       goToHome() {
          this.$router.push('/home-professor')
+      },
+      goToHomeAluno() {
+         this.$router.push('/home-aluno')
       },
       goToPerfil() {
          this.$router.push('/perfil-professor')
