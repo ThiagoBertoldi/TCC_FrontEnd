@@ -3,41 +3,47 @@
       <nav class="navbar-component pa-4">
          <h2>GAMINO</h2>
          <div class="navRoute d-flex align-center" style="gap: 20px;">
-            <div v-if="routes?.home" @click="goToHome">
+            <div v-if="routes?.home && this.$store.getters.getUser.type == 1" @click="goToHome">
                Home
             </div>
-            <div v-if="routes?.cadastrarMateria" @click="openCriaMateria">
+            <div v-if="routes?.cadastrarMateria && this.$store.getters.getUser.type == 1" @click="openCriaMateria">
                Cadastrar Matéria
             </div>
-            <div v-if="routes?.cadastrarAula" @click="openCriaAula">
+            <div v-if="routes?.cadastrarAula && this.$store.getters.getUser.type == 1" @click="openCriaAula">
                Criar Aula
             </div>
-            <div v-if="routes?.cadastraQuestao" @click="openCriaQuestao">
+            <div v-if="routes?.cadastraQuestao && this.$store.getters.getUser.type == 1" @click="openCriaQuestao">
                Criar Questão
             </div>
-            <div v-if="routes?.mercadoAula" @click="openMercado">
+            <div v-if="routes?.adicionaAlunoMateria && this.$store.getters.getUser.type == 1" @click="openAdicionaAluno">
+               Adicionar Aluno
+            </div>
+            <div v-if="routes?.mercadoAula && this.$store.getters.getUser.type == 1" @click="openMercado">
                Mercado
             </div>
-            <div v-if="routes?.boardSave">
+            <div v-if="routes?.boardSave && this.$store.getters.getUser.type == 1">
                <v-btn color="green" @click="salvarBoard">
                   Salvar
                </v-btn>
             </div>
-            <div v-if="routes?.classSave">
+            <div v-if="routes?.classSave && this.$store.getters.getUser.type == 1">
                <v-btn color="green" @click="salvarAula">
                   Salvar
                </v-btn>
             </div>
-            <div v-if="routes?.deleteBoard">
+            <div v-if="routes?.deleteBoard && this.$store.getters.getUser.type == 1">
                <v-btn color="red" @click="deleteBoard">
                   Deletar
                </v-btn>
             </div>
-            <div v-if="routes?.perfilProfessor" @click="goToPerfil">
+            <div v-if="routes?.cadastraAluno && this.$store.getters.getUser.type == 1" @click="openCadastraAluno">
+               Cadastrar Aluno
+            </div>
+            <div v-if="routes?.perfilProfessor && this.$store.getters.getUser.type == 1" @click="goToPerfil">
                Perfil
             </div>
-            <div v-if="routes?.cadastraAluno" @click="openCadastraAluno">
-               Cadastrar Aluno
+            <div v-if="routes?.perfil && this.$store.getters.getUser.type == 2" @click="goToHomeAluno">
+               Home
             </div>
          </div>
       </nav>
@@ -48,8 +54,15 @@
       @atualizaPagina="atualizaPagina" 
       ref="criarMateria" />
 
-   <CriaAula @success_snackbar="setMessageSnackBar" @error_snackbar="setMessageSnackBar" @atualizaPagina="atualizaPagina"
+   <CriaAula 
+      @success_snackbar="setMessageSnackBar" 
+      @error_snackbar="setMessageSnackBar" 
+      @atualizaPagina="atualizaPagina"
       ref="criaAula" />
+
+   <AdicionaAlunoMateria 
+      ref="adicionaAlunoMateria"
+   />
 
    <CriarQuestao
       ref="criaQuestao"
@@ -74,6 +87,7 @@ import CriaAula from '../CriaAula/CriaAula.vue'
 import CriarQuestao from '../CriarQuestao/CriarQuestao.vue'
 import MercadoAula from '../Mercado/MercadoAula.vue'
 import CadastraAluno from '../CadastraAluno/CadastraAluno.vue'
+import AdicionaAlunoMateria from '../AdicionaAlunoMateria/AdicionaAlunoMateria.vue'
 
 export default {
    data() {
@@ -105,6 +119,9 @@ export default {
       openMercado() {
          this.$refs.mercadoAula.openModal()
       },
+      openAdicionaAluno() {
+         this.$refs.adicionaAlunoMateria.openModal()
+      },
       setMessageSnackBar(message, success) {
          this.snackbar = true
          this.snackbar_success = success
@@ -131,7 +148,8 @@ export default {
       CriaAula,
       CriarQuestao,
       MercadoAula,
-      CadastraAluno
+      CadastraAluno,
+      AdicionaAlunoMateria
    },
    emits: [ 'atualizaPagina', 'salvarBoard', 'salvarAula', 'deleteBoard', 'salvaMercado' ]
 }

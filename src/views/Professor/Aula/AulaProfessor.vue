@@ -22,7 +22,8 @@ export default {
             cadastrarAula: true,
             cadastraQuestao: true,
             mercadoAula: true,
-            classSave: true
+            classSave: true,
+            adicionaAlunoMateria: true
          },
          classBg: null,
          montado: false
