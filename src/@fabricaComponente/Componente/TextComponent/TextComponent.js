@@ -2,7 +2,7 @@ import { addRemoveButton } from "../../Metodo/removeButton";
 import { adicionaEfeitoArrastar } from "../../Metodo/draggableComponente";
 
 export const fabTextComponent = {
-   createComponent(canvas, element) {
+   createComponent(canvas, element, isStudent) {
       let areaElement = document.createElement('div');
       let titleElement = document.createElement('textarea');
       let inputElement = document.createElement('textarea');
@@ -51,13 +51,18 @@ export const fabTextComponent = {
       titleElement.value = element?.component?.title ?? null
       inputElement.value = element?.component?.text ?? null
 
-      this.addEventInputChange(titleElement)
-      this.addEventInputChange(inputElement)
+      if(!isStudent) {
+         this.addEventInputChange(titleElement)
+         this.addEventInputChange(inputElement)
+      } else {
+         titleElement.setAttribute('readonly', true)
+         inputElement.setAttribute('readonly', true)
+      }
 
       areaElement.appendChild(titleElement)
       areaElement.appendChild(inputElement)
 
-      this.addElementCanvas(canvas, areaElement)
+      this.addElementCanvas(canvas, areaElement, isStudent)
    },
    addEventInputChange(element) {
       element.addEventListener('input', (event) => {
@@ -69,9 +74,11 @@ export const fabTextComponent = {
          element.innerText = element.value
       })
    },
-   addElementCanvas(canvas, element) {
-      adicionaEfeitoArrastar(element)
-      addRemoveButton(element)
+   addElementCanvas(canvas, element, student) {
+      if(!student) {
+         adicionaEfeitoArrastar(element)
+         addRemoveButton(element)
+      }
 
       canvas.appendChild(element)
    }

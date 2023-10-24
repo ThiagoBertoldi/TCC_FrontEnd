@@ -2,7 +2,7 @@ import { addRemoveButton } from "../../Metodo/removeButton";
 import { adicionaEfeitoArrastar } from "../../Metodo/draggableComponente";
 
 export const fabImageComponent = {
-   createComponent(canvas, element) {
+   createComponent(canvas, element, isStudent) {
       let areaElement = document.createElement('div');
       let imageElement = document.createElement('img');
       let buttonAddImage = document.createElement('input');
@@ -40,20 +40,27 @@ export const fabImageComponent = {
       stylesImage.maxWidth = '650px'
       stylesImage.maxHeight = '380px'
 
-      this.changeImage(buttonAddImage, imageElement)
+      if(!isStudent)
+         this.changeImage(buttonAddImage, imageElement, isStudent)
+      
+      if(!isStudent)
+         areaElement.appendChild(buttonAddImage)
 
-      areaElement.appendChild(buttonAddImage)
       areaElement.appendChild(imageElement)
 
-      this.addElementCanvas(canvas, areaElement)
+      this.addElementCanvas(canvas, areaElement, isStudent)
    },
-   addElementCanvas(canvas, element) {
-      addRemoveButton(element)
-      adicionaEfeitoArrastar(element)
+   addElementCanvas(canvas, element, student) {
+      if(!student) {
+         addRemoveButton(element)
+         adicionaEfeitoArrastar(element)
+      }
 
       canvas.appendChild(element)
    },
-   changeImage(buttonElement, imageElement) {
+   changeImage(buttonElement, imageElement, student) {
+      if(student) return
+      
       buttonElement.addEventListener('change', function (event) {
          const selectedFile = event.target.files[0];
 

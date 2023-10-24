@@ -6,7 +6,6 @@
    </div>
 </template>
 
-
 <script>
 import { adicionaEfeitoArrastar } from '@/@fabricaComponente/Metodo/draggableComponente'
 import NavBar from '../../../components/NavBar/NavBar.vue'
@@ -26,6 +25,7 @@ export default {
             .then(response => {
                if(response.data instanceof Array) {
                   response.data.map((aula, index) => {
+                     console.log(response.data)
                      this.criaElementClass(index, aula)
                   })
                }
@@ -69,9 +69,9 @@ export default {
             element.appendChild(numElement)
    
             if(aula.tipoAula === 1) {
-               element.addEventListener('dblclick', () => this.$router.push({ name: 'BoardProfessor', params: { id: aula.idBoard } }))
+               element.addEventListener('dblclick', () => this.$router.push({ name: 'BoardAluno', params: { id: aula.idBoard } }))
             } else {
-               element.addEventListener('dblclick', () => this.$refs.attQuestao.openModal(aula))
+               element.addEventListener('dblclick', () => this.$refs.questaoAluno.openModal(aula))
             }
    
             adicionaEfeitoArrastar(element)

@@ -2,7 +2,7 @@ import { addRemoveButton } from "../../Metodo/removeButton"
 import { adicionaEfeitoArrastar } from "../../Metodo/draggableComponente"
 
 export const fabArrowComponent = {
-   createComponent(canvas, element, side) {
+   createComponent(canvas, element, side, isStudent) {
       let div = document.createElement('div')
       let image = document.createElement('img')
 
@@ -29,12 +29,14 @@ export const fabArrowComponent = {
 
       div.appendChild(image)
 
-      this.addElementCanvas(canvas, div)
+      this.addElementCanvas(canvas, div, isStudent)
    },
-   addElementCanvas(canvas, element) {
+   addElementCanvas(canvas, element, student) {
 
-      addRemoveButton(element)
-      adicionaEfeitoArrastar(element)
+      if(!student) {
+         addRemoveButton(element)
+         adicionaEfeitoArrastar(element)
+      }
 
       canvas.appendChild(element)
    }
