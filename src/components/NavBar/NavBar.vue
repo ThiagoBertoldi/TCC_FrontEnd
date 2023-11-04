@@ -49,6 +49,9 @@
             <div v-if="routes?.mercadoAluno && this.$store.getters.getUser.type == 2" @click="abreMercadoAluno">
                Mercado
             </div>
+            <div v-if="routes?.perfilAluno && this.$store.getters.getUser.type == 2" @click="goToPerfilAluno">
+               Perfil
+            </div>
          </div>
          <div v-if="$router.currentRoute.value.name == 'AulaAluno' && this.$store.getters.getUser.type == 2"
             style="color: gold;">
@@ -105,6 +108,9 @@ export default {
       },
       goToPerfil() {
          this.$router.push('/perfil-professor')
+      },
+      goToPerfilAluno() {
+         this.$router.push('/perfil-aluno')
       },
       openCriaMateria() {
          this.$refs.criarMateria.openModal()

@@ -9,6 +9,7 @@ import BoardProfessor from '../views/Professor/Board/BoardProfessor.vue'
 import PerfilProfessor from '../views/Professor/Perfil/Perfil.vue'
 import AulaAluno from '../views/Aluno/Aula/AulaAluno.vue'
 import BoardAluno from '../views/Aluno/Board/BoardAluno.vue'
+import PerfilAluno from '../views/Aluno/Perfil/PerfilAluno.vue'
 
 const routes = [
   {
@@ -79,6 +80,15 @@ const routes = [
     path: '/board-aluno/:id',
     name: 'BoardAluno',
     component: BoardAluno,
+    meta: {
+      requiresAuth: true,
+      typeUser: 2
+    }
+  },
+  {
+    path: '/perfil-aluno',
+    name: 'PerfilAluno',
+    component: PerfilAluno,
     meta: {
       requiresAuth: true,
       typeUser: 2
