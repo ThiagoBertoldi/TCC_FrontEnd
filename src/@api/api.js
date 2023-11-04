@@ -35,12 +35,6 @@ const api = {
             .then(response => resolve(response))
             .catch(err => reject(err))
       })
-   },
-   put: () => {
-
-   },
-   delete: () => {
-
    }
 }
 

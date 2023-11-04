@@ -3,12 +3,16 @@
       <NavBar :routes="rotasNavBar" />
       <img id="bgImg" />
       <div class="canvas" style="position: absolute; width: 100%; height: 100vh;"></div>
+      <QuestaoAluno 
+         ref="questaoAluno"
+      />
    </div>
 </template>
 
 <script>
 import { adicionaEfeitoArrastar } from '@/@fabricaComponente/Metodo/draggableComponente'
 import NavBar from '../../../components/NavBar/NavBar.vue'
+import QuestaoAluno from '../../../components/QuestaoAluno/QuestaoAluno.vue'
 
 export default {
    data() {
@@ -25,7 +29,6 @@ export default {
             .then(response => {
                if(response.data instanceof Array) {
                   response.data.map((aula, index) => {
-                     console.log(response.data)
                      this.criaElementClass(index, aula)
                   })
                }
@@ -84,7 +87,8 @@ export default {
       this.buscaAulas()
    },
    components: {
-      NavBar
+      NavBar,
+      QuestaoAluno
    }
 }
 </script>
