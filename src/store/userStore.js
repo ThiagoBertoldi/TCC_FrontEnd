@@ -9,11 +9,17 @@ export default createStore({
    mutations: {
       setUser: (state, user) => {
          state.user = user
+      },
+      setMoedas: (state, moedas) => {
+         state.user = { ...state.user, moedas}
       }
    },
    getters: {
       getUser(state) {
          return state.user
+      },
+      getMoedas(state) {
+         return state.user?.moedas ?? 0
       }
    },
    actions: {
@@ -27,7 +33,7 @@ export default createStore({
             .catch(err => reject(err.response.data))
          })
       },
-      cadastro: async({ dispatch }, dto) => {
+      cadastro: async({  }, dto) => {
          return await new Promise(async (resolve, reject) => {
             await axios.post('http://localhost:3000/register', { dto })
             .then(response => {
@@ -36,6 +42,7 @@ export default createStore({
             .catch(err => reject(err.response.data))
          })
       },
+      setMoedas: async({ commit }, moedas) => commit('setMoedas', moedas),
       setUserNull: async ({ commit }) => commit('setUser', null),
       logOut: async({ commit }) => {
          router.push('/')

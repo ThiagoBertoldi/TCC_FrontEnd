@@ -47,35 +47,25 @@
                Home
             </div>
          </div>
+         <div v-if="$router.currentRoute.value.name == 'AulaAluno' && this.$store.getters.getUser.type == 2"
+            style="color: gold;">
+            Moedas: {{ $store.getters.getMoedas }}
+         </div>
       </nav>
    </div>
-   <CriaMateria 
-      @success_snackbar="setMessageSnackBar" 
-      @error_snackbar="setMessageSnackBar"
-      @atualizaPagina="atualizaPagina" 
-      ref="criarMateria" />
+   <CriaMateria @success_snackbar="setMessageSnackBar" @error_snackbar="setMessageSnackBar"
+      @atualizaPagina="atualizaPagina" ref="criarMateria" />
 
-   <CriaAula 
-      @success_snackbar="setMessageSnackBar" 
-      @error_snackbar="setMessageSnackBar" 
-      @atualizaPagina="atualizaPagina"
+   <CriaAula @success_snackbar="setMessageSnackBar" @error_snackbar="setMessageSnackBar" @atualizaPagina="atualizaPagina"
       ref="criaAula" />
 
-   <AdicionaAlunoMateria 
-      ref="adicionaAlunoMateria"
-   />
+   <AdicionaAlunoMateria ref="adicionaAlunoMateria" />
 
-   <CriarQuestao
-      ref="criaQuestao"
-   />
+   <CriarQuestao ref="criaQuestao" />
 
-   <MercadoAula
-      ref="mercadoAula"
-   />
+   <MercadoAula ref="mercadoAula" />
 
-   <CadastraAluno
-      ref="cadastraAluno"
-   />
+   <CadastraAluno ref="cadastraAluno" />
 
    <v-snackbar v-model="snackbar" :timeout="3000" :color="snackbar_success ? 'green' : 'red'">
       {{ snackbar_message }}
@@ -89,6 +79,7 @@ import CriarQuestao from '../CriarQuestao/CriarQuestao.vue'
 import MercadoAula from '../Mercado/MercadoAula.vue'
 import CadastraAluno from '../CadastraAluno/CadastraAluno.vue'
 import AdicionaAlunoMateria from '../AdicionaAlunoMateria/AdicionaAlunoMateria.vue'
+import { useStore } from 'vuex'
 
 export default {
    data() {
@@ -137,12 +128,23 @@ export default {
       salvarBoard() {
          this.$emit('salvarBoard', null)
       },
-      salvarAula(){
+      salvarAula() {
          this.$emit('salvarAula', null)
       },
       deleteBoard() {
          this.$emit('confirmDeleteBoard', null)
+      },
+      getMoedasAluno() {
+         if (this.$router.currentRoute.value.name == 'AulaAluno') {
+            this.$api.get('get-moedas', { idMateria: this.$route.params.id })
+               .then(response => {
+                  this.$store.dispatch('setMoedas', response.data.moedas)
+               })
+         }
       }
+   },
+   mounted() {
+      this.getMoedasAluno()
    },
    props: {
       routes: Object
@@ -155,6 +157,6 @@ export default {
       CadastraAluno,
       AdicionaAlunoMateria
    },
-   emits: [ 'atualizaPagina', 'salvarBoard', 'salvarAula', 'deleteBoard', 'salvaMercado' ]
+   emits: ['atualizaPagina', 'salvarBoard', 'salvarAula', 'deleteBoard', 'salvaMercado']
 }
 </script>

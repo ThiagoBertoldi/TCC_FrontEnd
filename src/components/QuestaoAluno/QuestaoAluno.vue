@@ -22,7 +22,7 @@
                </template>
             </v-card-text>
          </v-card-text>
-         <v-card-actions class="ma-4">
+         <v-card-actions class="ma-4" v-if="!respondida">
             <v-spacer></v-spacer>
             <v-btn color="blue-darken-1" variant="text" @click="show = false">
                Voltar
@@ -44,14 +44,16 @@ export default {
          listaRespostas: [],
          questaoSelecionada: null,
          idAula: null,
-         questao: null
+         questao: null,
+         respondida: true
       }
    },
    methods: {
-      openModal(sender) {
+      openModal(sender, respondida) {
          this.model = {}
 
          this.idAula = sender._id
+         this.respondida = respondida
 
          this.$api.get('get-questao', { idAula: sender._id })
             .then(response => {
@@ -84,6 +86,7 @@ export default {
          .then(response => {
             this.show = false
             this.model = {}
+            this.$emit('refresh', null)
          })
          .catch(err => console.log(err))
       }
