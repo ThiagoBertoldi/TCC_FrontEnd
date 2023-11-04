@@ -51,8 +51,6 @@ export default {
       this.$api.get('get-components', { idBoard })
          .then(response => {
             let canvas = this.$refs.canvas.$el
-
-            console.log(response, 'Componentes board')
             response.data.response.map(element => {
                this.getElementMethods(element.component.type, canvas, element)
             })

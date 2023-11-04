@@ -46,10 +46,13 @@
             <div v-if="routes?.homeAluno && this.$store.getters.getUser.type == 2" @click="goToHomeAluno">
                Home
             </div>
+            <div v-if="routes?.mercadoAluno && this.$store.getters.getUser.type == 2" @click="abreMercadoAluno">
+               Mercado
+            </div>
          </div>
          <div v-if="$router.currentRoute.value.name == 'AulaAluno' && this.$store.getters.getUser.type == 2"
             style="color: gold;">
-            Moedas: {{ $store.getters.getMoedas }}
+            Moedas: R$ {{ $store.getters.getMoedas }}
          </div>
       </nav>
    </div>
@@ -67,6 +70,10 @@
 
    <CadastraAluno ref="cadastraAluno" />
 
+   <MercadoAluno
+      ref="mercadoAluno"
+   />
+
    <v-snackbar v-model="snackbar" :timeout="3000" :color="snackbar_success ? 'green' : 'red'">
       {{ snackbar_message }}
    </v-snackbar>
@@ -76,10 +83,10 @@
 import CriaMateria from '../CriaMateria/CriaMateria.vue'
 import CriaAula from '../CriaAula/CriaAula.vue'
 import CriarQuestao from '../CriarQuestao/CriarQuestao.vue'
-import MercadoAula from '../Mercado/MercadoAula.vue'
+import MercadoAula from '../Mercado/Professor/MercadoAula.vue'
 import CadastraAluno from '../CadastraAluno/CadastraAluno.vue'
 import AdicionaAlunoMateria from '../AdicionaAlunoMateria/AdicionaAlunoMateria.vue'
-import { useStore } from 'vuex'
+import MercadoAluno from '../Mercado/Aluno/MercadoAluno.vue'
 
 export default {
    data() {
@@ -141,6 +148,9 @@ export default {
                   this.$store.dispatch('setMoedas', response.data.moedas)
                })
          }
+      },
+      abreMercadoAluno() {
+         this.$refs.mercadoAluno.openModal(this.$route.params.id)
       }
    },
    mounted() {
@@ -155,7 +165,8 @@ export default {
       CriarQuestao,
       MercadoAula,
       CadastraAluno,
-      AdicionaAlunoMateria
+      AdicionaAlunoMateria,
+      MercadoAluno
    },
    emits: ['atualizaPagina', 'salvarBoard', 'salvarAula', 'deleteBoard', 'salvaMercado']
 }

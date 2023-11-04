@@ -2,7 +2,7 @@
    <div class="d-flex flex-column" style="height:100vh; width: 100%">
       <NavBar :routes="rotasNavBar" />
       <img id="bgImg" />
-      <div class="canvas" style="position: absolute; width: 100%; height: 100vh;"></div>
+      <div class="canvas" style="position: absolute; width: 100%; height: 90vh; margin-top: 10vh"></div>
       <QuestaoAluno ref="questaoAluno" @refresh="refresh" />
    </div>
 </template>
@@ -17,7 +17,8 @@ export default {
    data() {
       return {
          rotasNavBar: {
-            homeAluno: true
+            homeAluno: true,
+            mercadoAluno: true
          },
          classBg: null
       }

@@ -57,7 +57,6 @@ export default {
 
          this.$api.get('get-questao', { idAula: sender._id })
             .then(response => {
-               console.log(response)
                this.questao = response.data
                this.model.descricaoQuestao = response.data.descricaoQuestao
                this.listaRespostas = response.data.listaRespostas
