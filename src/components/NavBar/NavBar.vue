@@ -39,6 +39,9 @@
             <div v-if="routes?.cadastraAluno && this.$store.getters.getUser.type == 1" @click="openCadastraAluno">
                Cadastrar Aluno
             </div>
+            <div v-if="routes?.notificacoes && this.$store.getters.getUser.type == 1" @click="openNotificacoes">
+               Notificações
+            </div>
             <div v-if="routes?.perfilProfessor && this.$store.getters.getUser.type == 1" @click="goToPerfil">
                Perfil
             </div>
@@ -73,6 +76,8 @@
 
    <CadastraAluno ref="cadastraAluno" />
 
+   <Notificacao ref="notificacao" />
+
    <MercadoAluno
       ref="mercadoAluno"
    />
@@ -90,6 +95,7 @@ import MercadoAula from '../Mercado/Professor/MercadoAula.vue'
 import CadastraAluno from '../CadastraAluno/CadastraAluno.vue'
 import AdicionaAlunoMateria from '../AdicionaAlunoMateria/AdicionaAlunoMateria.vue'
 import MercadoAluno from '../Mercado/Aluno/MercadoAluno.vue'
+import Notificacao from '../Notificacao/Notificacao.vue'
 
 export default {
    data() {
@@ -129,6 +135,9 @@ export default {
       },
       openAdicionaAluno() {
          this.$refs.adicionaAlunoMateria.openModal()
+      },
+      openNotificacoes() {
+         this.$refs.notificacao.openModal()
       },
       setMessageSnackBar(message, success) {
          this.snackbar = true
@@ -172,7 +181,8 @@ export default {
       MercadoAula,
       CadastraAluno,
       AdicionaAlunoMateria,
-      MercadoAluno
+      MercadoAluno,
+      Notificacao
    },
    emits: ['atualizaPagina', 'salvarBoard', 'salvarAula', 'deleteBoard', 'salvaMercado']
 }

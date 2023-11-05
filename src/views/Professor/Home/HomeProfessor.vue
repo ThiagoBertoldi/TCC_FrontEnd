@@ -37,7 +37,8 @@ export default {
          rotasNavBar: {
             cadastrarMateria: true,
             perfilProfessor: true,
-            cadastraAluno: true
+            cadastraAluno: true,
+            notificacoes: true
          },
          materias: [],
          snackbar: false,
