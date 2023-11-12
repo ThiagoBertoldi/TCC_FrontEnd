@@ -59,7 +59,8 @@ export default {
          rotasNavBar: {
             home: true,
             boardSave: true,
-            deleteBoard: true
+            deleteBoard: true,
+            voltarParaMateria: true
          }
       }
    },

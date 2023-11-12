@@ -15,7 +15,8 @@ export default {
       return {
          model: {},
          rotasNavBar: {
-            homeAluno: true
+            homeAluno: true,
+            voltarParaMateria: true
          }
       }
    },

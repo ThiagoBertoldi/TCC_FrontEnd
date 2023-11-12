@@ -33,12 +33,18 @@ export default {
       buscaAulas(id) {
          this.$api.get('get-aulas', { idMateria: id })
             .then(response => {
+               var canvas = document.getElementsByClassName('canvas');
+
+               while (canvas.firstChild)
+                  canvas.removeChild(canvas.firstChild);
+
                if(response.data instanceof Array) {
                   response.data.map((aula, index) => {
                      this.criaElementClass(index, aula)
                   })
 
                   this.setBackground()
+                  this.salvarAula()
                }
             })
             .catch(err => { })
@@ -89,6 +95,8 @@ export default {
          style.position = 'absolute'
          style.left = `${aula?.posicaoX ?? 0}px`
          style.top = `${aula?.posicaoY ?? 0}px`
+         style.cursor = 'pointer'
+         style.userSelect = 'none'
 
          let numElement = document.createElement('p')
          numElement.innerText = num + 1
@@ -159,6 +167,6 @@ export default {
 .btn-troca-bg {
    position: absolute;
    right: 16px;
-   top: 84px;
+   top: 100px;
 }
 </style>

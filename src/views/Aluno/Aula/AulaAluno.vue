@@ -1,10 +1,9 @@
 <template>
-   <div class="d-flex flex-column" style="height:100vh; width: 100%">
-      <NavBar :routes="rotasNavBar" />
-      <img id="bgImg" />
-      <div class="canvas" style="position: absolute; width: 100%; height: 90vh; margin-top: 10vh"></div>
-      <QuestaoAluno ref="questaoAluno" @refresh="refresh" />
-   </div>
+   <NavBar :routes="rotasNavBar" ref="navBarRef" />
+   <div class="canvas" :style="{ height: canvasHeight + 'px' }">
+         <img id="bgImg" style="width: 100%; height: 100%;" />
+      </div>
+   <QuestaoAluno ref="questaoAluno" @refresh="refresh" />
 </template>
 
 <script>
@@ -22,27 +21,28 @@ export default {
             perfilAluno: true,
             ranking: true
          },
-         classBg: null
+         classBg: null,
+         canvasHeight: 0
       }
    },
    methods: {
       buscaAulas() {
          this.$api.get('get-aulas', { idMateria: this.$route.params.id })
-         .then(aulas => {
-            this.$api.get('questoes-respondidas', { idMateria: this.$route.params.id })
-            .then(respondidas => {
-               let aulasData = aulas.data
-               let respondidasData = respondidas.data
+            .then(aulas => {
+               this.$api.get('questoes-respondidas', { idMateria: this.$route.params.id })
+                  .then(respondidas => {
+                     let aulasData = aulas.data
+                     let respondidasData = respondidas.data
 
-               if (aulasData instanceof Array) {
-                  aulasData.map((aula, index) => {
-                     let estaRespondida = respondidasData.find(x => x.idAula == aula._id && aula.tipoAula === 2)
-                     this.criaElementClass(index, aula, estaRespondida)
+                     if (aulasData instanceof Array) {
+                        aulasData.map((aula, index) => {
+                           let estaRespondida = respondidasData.find(x => x.idAula == aula._id && aula.tipoAula === 2)
+                           this.criaElementClass(index, aula, estaRespondida)
+                        })
+                     }
                   })
-               }
             })
-         })
-         .catch(err => { })
+            .catch(err => { })
       },
       refresh() {
          this.buscaAulas()
@@ -55,7 +55,6 @@ export default {
          await this.$api.post('get-background', dto)
             .then(async response => {
                img.src = response.data.backgroundBase64
-               img.style.height = '90.6%'
             })
             .catch(err => console.log(err))
       },
@@ -69,10 +68,10 @@ export default {
          let style = element.style
          style.width = '50px'
          style.height = '50px'
-         style.backgroundColor = 
-            aula.tipoAula == 1 
-               ? 'blue' 
-               : !respondida 
+         style.backgroundColor =
+            aula.tipoAula == 1
+               ? 'blue'
+               : !respondida
                   ? 'orange'
                   : respondida?.respostaCorreta
                      ? 'green'
@@ -85,6 +84,8 @@ export default {
          style.position = 'absolute'
          style.left = `${aula?.posicaoX ?? 0}px`
          style.top = `${aula?.posicaoY ?? 0}px`
+         style.cursor = 'pointer'
+         style.userSelect = 'none'
 
          let numElement = document.createElement('p')
          numElement.innerText = num + 1
@@ -102,8 +103,17 @@ export default {
 
          canvas.appendChild(element)
       },
+      calculateCanvasHeight() {
+         const navBarHeight = this.$refs.navBarRef?.$el.parentNode.clientHeight;
+         if(!navBarHeight) return
+
+         this.canvasHeight = window.innerHeight - navBarHeight;
+      },
    },
    mounted() {
+      this.calculateCanvasHeight();
+      window.addEventListener('resize', this.calculateCanvasHeight());
+
       this.setBackground()
       this.buscaAulas()
    },

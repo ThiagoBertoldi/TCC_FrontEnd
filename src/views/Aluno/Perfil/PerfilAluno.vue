@@ -3,7 +3,7 @@
    <div style="width: 100%; height: 88vh; margin-top: 4vh" class="m-4">
       <v-row>
          <v-col cols="12">
-            <v-row>
+            <v-row class="d-flex justify-center">
                <v-col cols="5" class="d-flex justify-center align-center flex-column">
                   <div style="width: 250px; height: 250px; background-color: white; border-radius: 50%; padding: 20px">
                      <svg xmlns="http://www.w3.org/2000/svg" fill="black" viewBox="0 0 24 24">
@@ -17,11 +17,11 @@
                      <p> {{ titulo }} </p>
                   </div>
                </v-col>
-               <v-col cols="7" class="d-flex align-center flex-column">
+               <v-col cols="5" class="d-flex align-center flex-column">
                   <h2 style="color: white">Títulos</h2>
-                  <div style="width: 84%; max-height: 300px; overflow: auto">
+                  <div style="width: 100%; max-height: 300px; overflow: auto">
                      <template v-for="item in titulos" :key="item.nomeMateria">
-                        <v-card variant="outlined" color="green" class="ma-2">
+                        <v-card class="ma-2">
                            <v-card-text @click="selecTitulo(item)">
                               {{ item.descricao }}
                            </v-card-text>
@@ -32,39 +32,30 @@
             </v-row>
          </v-col>
          <v-col class="my-4">
-            <v-row class="my-2">
-               <v-col class="d-flex justify-center align-center flex-column">
-                  <h2 style="color: white" class="mb-4">Extratos</h2>
-                  <v-table v-if="extratos != []" style="width: 90%">
-                     <thead>
-                        <tr>
-                           <th class="text-left">
-                              Item Comprado
-                           </th>
-                           <th class="text-left">
-                              MoedasPagas
-                           </th>
-                           <th class="text-left">
-                              Matéria
-                           </th>
-                           <th class="text-left">
-                              Turma
-                           </th>
-                           <th class="text-left">
-                              Data de Compra
-                           </th>
-                        </tr>
-                     </thead>
-                     <tbody>
-                        <tr v-for="item in extratos" :key="item.nomeMateria">
-                           <td>{{ item.nomeMateria }}</td>
-                           <td>{{ item.moedas }}</td>
-                           <td>{{ item.nomeMateria }}</td>
-                           <td>{{ item.turma }}</td>
-                           <td>{{ new Date(item.created_at).toLocaleDateString('pt-BR') }}</td>
-                        </tr>
-                     </tbody>
-                  </v-table>
+            <v-row class="my-2 d-flex justify-center">
+               <v-col cols="10" class="d-flex justify-center align-center flex-column">
+                  <h2 style="color: white" class="mb-4">Extrato dos Itens comprados</h2>
+                  <template v-for="item in extratos" :key="item.nomeMateria">
+                     <v-col>
+                        <v-card class="pa-2 d-flex justify-between">
+                           <v-col>
+                              <td>Item: {{ item.nomeItem }}</td>
+                           </v-col>
+                           <v-col>
+                              <td>Preço: {{ item.moedas }} moedas</td>
+                           </v-col>
+                           <v-col>
+                              <td>Matéria: {{ item.nomeMateria }}</td>
+                           </v-col>
+                           <v-col>
+                              <td>Turma: {{ item.turma }}</td>
+                           </v-col>
+                           <v-col>
+                              <td>Data da compra: {{ new Date(item.created_at).toLocaleDateString('pt-BR') }}</td>
+                           </v-col>
+                        </v-card>
+                     </v-col>
+                  </template>
                </v-col>
             </v-row>
          </v-col>
@@ -89,32 +80,32 @@ export default {
    methods: {
       selecTitulo(titulo) {
          this.$api.post('define-titulo', { titulo: titulo.descricao })
-         .then(() => {
-            this.getTitulo()
-         })
-         .catch(err => console.log(err))
+            .then(() => {
+               this.getTitulo()
+            })
+            .catch(err => console.log(err))
       },
       getTitulo() {
-         this.$api.get('get-titulo', {  })
-         .then(response => { this.titulo = response.data.titulo })
-         .catch(err => { return 'Error' })
+         this.$api.get('get-titulo', {})
+            .then(response => { this.titulo = response.data.titulo })
+            .catch(err => { return 'Error' })
       },
       getTitulos() {
          this.$api.get('get-titulos', null)
-         .then(response => this.titulos = response.data)
-         .catch(err => console.log(err))
+            .then(response => this.titulos = response.data)
+            .catch(err => console.log(err))
       },
       getExtrato() {
          this.$api.get('get-extrato', {})
-         .then(response => this.extratos = response.data.objetosFinais)
-         .catch(err => console.log(err))
+            .then(response => this.extratos = response.data.objetosFinais)
+            .catch(err => console.log(err))
       }
    },
    async mounted() {
-      
+
       await this.getTitulo()
       await this.getTitulos()
-      await this.getExtrato()      
+      await this.getExtrato()
 
    },
    components: {

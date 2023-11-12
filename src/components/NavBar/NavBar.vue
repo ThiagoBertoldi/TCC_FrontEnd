@@ -1,72 +1,81 @@
 <template>
    <div class="elevation-8 bg-white">
       <nav class="navbar-component pa-4">
-         <h2>GAMINO</h2>
-         <div class="navRoute d-flex align-center" style="gap: 20px;">
-            <div v-if="routes?.home && this.$store.getters.getUser.type == 1" @click="goToHome">
-               Home
-            </div>
-            <div v-if="routes?.cadastrarMateria && this.$store.getters.getUser.type == 1" @click="openCriaMateria">
-               Cadastrar Matéria
-            </div>
-            <div v-if="routes?.cadastrarAula && this.$store.getters.getUser.type == 1" @click="openCriaAula">
-               Criar Aula
-            </div>
-            <div v-if="routes?.cadastraQuestao && this.$store.getters.getUser.type == 1" @click="openCriaQuestao">
-               Criar Questão
-            </div>
-            <div v-if="routes?.adicionaAlunoMateria && this.$store.getters.getUser.type == 1" @click="openAdicionaAluno">
-               Adicionar Aluno
-            </div>
-            <div v-if="routes?.mercadoAula && this.$store.getters.getUser.type == 1" @click="openMercado">
-               Mercado
-            </div>
-            <div v-if="routes?.boardSave && this.$store.getters.getUser.type == 1">
-               <v-btn color="green" @click="salvarBoard">
-                  Salvar
-               </v-btn>
-            </div>
-            <div v-if="routes?.classSave && this.$store.getters.getUser.type == 1">
-               <v-btn color="green" @click="salvarAula">
-                  Salvar
-               </v-btn>
-            </div>
-            <div v-if="routes?.deleteBoard && this.$store.getters.getUser.type == 1">
-               <v-btn color="red" @click="deleteBoard">
-                  Deletar
-               </v-btn>
-            </div>
-            <div v-if="routes?.cadastraAluno && this.$store.getters.getUser.type == 1" @click="openCadastraAluno">
-               Cadastrar Aluno
-            </div>
-            <div v-if="routes?.notificacoes && this.$store.getters.getUser.type == 1" @click="openNotificacoes">
-               Notificações
-            </div>
-            <div v-if="routes?.perfilProfessor && this.$store.getters.getUser.type == 1" @click="goToPerfil">
-               Perfil
-            </div>
+         <v-col cols="2">
+            <h2>GAMINO</h2>
+         </v-col>
 
-            <div v-if="routes?.homeAluno && this.$store.getters.getUser.type == 2" @click="goToHomeAluno">
-               Home
+         <v-col class="d-flex justify-end mr-4">
+            <div class="navRoute d-flex align-center" style="gap: 20px;">
+               <div v-if="routes?.home && this.$store.getters.getUser.type == 1" @click="goToHome">
+                  Home
+               </div>
+               <div v-if="routes?.homeAluno && this.$store.getters.getUser.type == 2" @click="goToHomeAluno">
+                  Home
+               </div>
+               <div v-if="routes?.cadastrarMateria && this.$store.getters.getUser.type == 1" @click="openCriaMateria">
+                  Cadastrar Matéria
+               </div>
+               <div v-if="routes?.cadastrarAula && this.$store.getters.getUser.type == 1" @click="openCriaAula">
+                  Criar Aula
+               </div>
+               <div v-if="routes?.cadastraQuestao && this.$store.getters.getUser.type == 1" @click="openCriaQuestao">
+                  Criar Questão
+               </div>
+               <div v-if="routes?.adicionaAlunoMateria && this.$store.getters.getUser.type == 1"
+                  @click="openAdicionaAluno">
+                  Adicionar Aluno
+               </div>
+               <div v-if="routes?.mercadoAula && this.$store.getters.getUser.type == 1" @click="openMercado">
+                  Mercado
+               </div>
+               <div v-if="routes?.cadastraAluno && this.$store.getters.getUser.type == 1" @click="openCadastraAluno">
+                  Cadastrar Aluno
+               </div>
+               <div v-if="routes?.notificacoes && this.$store.getters.getUser.type == 1" @click="openNotificacoes">
+                  Notificações
+               </div>
+               <div v-if="routes?.ranking &&
+                  $router.currentRoute.value.name == 'AulaAluno' ||
+                  $router.currentRoute.value.name == 'Aulaprofessor'" @click="openRanking">
+                  Ranking
+               </div>
+               <div v-if="routes?.voltarParaMateria" @click="voltaParaMateria">
+                  Voltar
+               </div>
+               <div v-if="routes?.perfilProfessor && this.$store.getters.getUser.type == 1" @click="goToPerfil">
+                  Perfil
+               </div>
+
+               <div v-if="routes?.mercadoAluno && this.$store.getters.getUser.type == 2" @click="abreMercadoAluno">
+                  Mercado
+               </div>
+               <div v-if="routes?.perfilAluno && this.$store.getters.getUser.type == 2" @click="goToPerfilAluno">
+                  Perfil
+               </div>
+               <div v-if="routes?.boardSave && this.$store.getters.getUser.type == 1">
+                  <v-btn color="green" @click="salvarBoard">
+                     Salvar
+                  </v-btn>
+               </div>
+               <div v-if="routes?.classSave && this.$store.getters.getUser.type == 1">
+                  <v-btn color="green" @click="salvarAula">
+                     Salvar
+                  </v-btn>
+               </div>
+               <div v-if="routes?.deleteBoard && this.$store.getters.getUser.type == 1">
+                  <v-btn color="red" @click="deleteBoard">
+                     Deletar
+                  </v-btn>
+               </div>
             </div>
-            <div v-if="routes?.mercadoAluno && this.$store.getters.getUser.type == 2" @click="abreMercadoAluno">
-               Mercado
+         </v-col>
+         <v-col cols="2" class="d-flex justify-center" v-if="$router.currentRoute.value.name == 'AulaAluno'">
+            <div v-if="$router.currentRoute.value.name == 'AulaAluno' && this.$store.getters.getUser.type == 2"
+               style="color: gold;">
+               Moedas: R$ {{ $store.getters.getMoedas }}
             </div>
-            <div v-if="routes?.perfilAluno && this.$store.getters.getUser.type == 2" @click="goToPerfilAluno">
-               Perfil
-            </div>
-            <div v-if="routes?.ranking && 
-               $router.currentRoute.value.name == 'AulaAluno' || 
-               $router.currentRoute.value.name == 'Aulaprofessor'" 
-               @click="openRanking"
-            >
-               Ranking
-            </div>
-         </div>
-         <div v-if="$router.currentRoute.value.name == 'AulaAluno' && this.$store.getters.getUser.type == 2"
-            style="color: gold;">
-            Moedas: R$ {{ $store.getters.getMoedas }}
-         </div>
+         </v-col>
       </nav>
    </div>
    <CriaMateria @success_snackbar="setMessageSnackBar" @error_snackbar="setMessageSnackBar"
@@ -85,13 +94,9 @@
 
    <Notificacao ref="notificacao" />
 
-   <MercadoAluno
-      ref="mercadoAluno"
-   />
+   <MercadoAluno ref="mercadoAluno" />
 
-   <Ranking
-      ref="openRanking"
-   />
+   <Ranking ref="openRanking" />
 
    <v-snackbar v-model="snackbar" :timeout="3000" :color="snackbar_success ? 'green' : 'red'">
       {{ snackbar_message }}
@@ -170,6 +175,9 @@ export default {
       },
       deleteBoard() {
          this.$emit('confirmDeleteBoard', null)
+      },
+      voltaParaMateria() {
+         this.$router.back()
       },
       getMoedasAluno() {
          if (this.$router.currentRoute.value.name == 'AulaAluno') {
