@@ -1,8 +1,9 @@
 <template>
   <v-dialog v-model="show" max-width="650px">
     <v-card>
-      <v-card-title class="ma-4">
+      <v-card-title class="ma-4 d-flex flex-column">
         <span class="text-h5">Respostas de {{ nome ?? '?' }} </span>
+        <p style="font-size: 18px">Conhecido como: <i style="font-size: 18px">{{ titulo ?? 'Novato' }}</i></p>
       </v-card-title>
 
       <v-card-text>
@@ -56,7 +57,8 @@ export default {
       show: false,
       nome: null,
       respostas: [],
-      acertos: {}
+      acertos: {},
+      titulo: null
     }
   },
   methods: {
@@ -71,7 +73,8 @@ export default {
       this.$api.get('respostas-aluno-materia', dto)
       .then(response => {
         this.nome = response.data.nome
-        
+        this.titulo = response.data.titulo
+
         this.acertos = {
           acertos: response.data.acertos,
           erros: response.data.erros,

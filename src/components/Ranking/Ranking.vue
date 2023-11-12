@@ -19,6 +19,7 @@
                     <v-col cols="9" class="d-flex flex-column">
                       <div>
                         <p>{{ item.nome }}</p>
+                        <i style="font-size: 14px">{{ item?.titulo ?? 'Novato' }}</i>
                       </div>
                       <div class="d-flex justify-end">
                         <p>{{ item.contador }} pts. </p>
@@ -35,11 +36,12 @@
         <v-col cols="12">
           <template v-for="(item, index) in ranking" :key="item">
             <v-card class="ma-2 d-flex justify-between" @click="abreRespostaAluno(item)" style="cursor: pointer;">
-              <v-col cols="1">
+              <v-col cols="1" class="d-flex justify-center align-center">
                 <p> {{ index + 4 }}° </p>
               </v-col>
-              <v-col cols="9" class="d-flex align-center">
+              <v-col cols="9" class="d-flex justify-center flex-column">
                 <p>{{ item.nome }}</p>
+                <i style="font-size: 14px">{{ item?.titulo ?? 'Novato' }}</i>
               </v-col>
               <v-col cols="2" class="d-flex justify-center align-center">
                 <p>{{ item.contador }} pts.</p>
