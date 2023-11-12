@@ -19,7 +19,8 @@ export default {
          rotasNavBar: {
             homeAluno: true,
             mercadoAluno: true,
-            perfilAluno: true
+            perfilAluno: true,
+            ranking: true
          },
          classBg: null
       }

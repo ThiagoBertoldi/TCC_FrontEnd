@@ -3,8 +3,8 @@
       <NavBar @atualizaPagina="atualizaPagina" :routes="rotasNavBar" />
       <div>
          <v-row class="ma-4">
-            <template v-for="materia in materias">
-               <v-col xs="12" sm="6" md="4" lg="2" xl="1">
+            <template v-for="materia in materias" :key="materia">
+               <v-col xs="12" sm="6" md="4" lg="2" xl="2">
                   <v-card class="card-materia" @click="goToAulaProfessor(materia._id)">
                      <v-card-title>
                         {{ materia.nomeMateria }}

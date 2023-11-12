@@ -55,6 +55,13 @@
             <div v-if="routes?.perfilAluno && this.$store.getters.getUser.type == 2" @click="goToPerfilAluno">
                Perfil
             </div>
+            <div v-if="routes?.ranking && 
+               $router.currentRoute.value.name == 'AulaAluno' || 
+               $router.currentRoute.value.name == 'Aulaprofessor'" 
+               @click="openRanking"
+            >
+               Ranking
+            </div>
          </div>
          <div v-if="$router.currentRoute.value.name == 'AulaAluno' && this.$store.getters.getUser.type == 2"
             style="color: gold;">
@@ -82,6 +89,10 @@
       ref="mercadoAluno"
    />
 
+   <Ranking
+      ref="openRanking"
+   />
+
    <v-snackbar v-model="snackbar" :timeout="3000" :color="snackbar_success ? 'green' : 'red'">
       {{ snackbar_message }}
    </v-snackbar>
@@ -96,6 +107,7 @@ import CadastraAluno from '../CadastraAluno/CadastraAluno.vue'
 import AdicionaAlunoMateria from '../AdicionaAlunoMateria/AdicionaAlunoMateria.vue'
 import MercadoAluno from '../Mercado/Aluno/MercadoAluno.vue'
 import Notificacao from '../Notificacao/Notificacao.vue'
+import Ranking from '../Ranking/Ranking.vue'
 
 export default {
    data() {
@@ -139,6 +151,9 @@ export default {
       openNotificacoes() {
          this.$refs.notificacao.openModal()
       },
+      openRanking() {
+         this.$refs.openRanking.openModal()
+      },
       setMessageSnackBar(message, success) {
          this.snackbar = true
          this.snackbar_success = success
@@ -160,7 +175,7 @@ export default {
          if (this.$router.currentRoute.value.name == 'AulaAluno') {
             this.$api.get('get-moedas', { idMateria: this.$route.params.id })
                .then(response => {
-                  this.$store.dispatch('setMoedas', response.data.moedas)
+                  this.$store.dispatch('setMoedas', response.data?.moedas ?? 0)
                })
          }
       },
@@ -182,7 +197,8 @@ export default {
       CadastraAluno,
       AdicionaAlunoMateria,
       MercadoAluno,
-      Notificacao
+      Notificacao,
+      Ranking
    },
    emits: ['atualizaPagina', 'salvarBoard', 'salvarAula', 'deleteBoard', 'salvaMercado']
 }

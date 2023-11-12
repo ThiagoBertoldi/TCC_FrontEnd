@@ -35,7 +35,7 @@
             <v-row class="my-2">
                <v-col class="d-flex justify-center align-center flex-column">
                   <h2 style="color: white" class="mb-4">Extratos</h2>
-                  <v-table style="width: 90%">
+                  <v-table v-if="extratos != []" style="width: 90%">
                      <thead>
                         <tr>
                            <th class="text-left">
@@ -82,14 +82,14 @@ export default {
             homeAluno: true,
          },
          titulos: [],
-         titulo: 'Aqui',
+         titulo: 'Título',
          extratos: []
       }
    },
    methods: {
       selecTitulo(titulo) {
          this.$api.post('define-titulo', { titulo: titulo.descricao })
-         .then(response => {
+         .then(() => {
             this.getTitulo()
          })
          .catch(err => console.log(err))
