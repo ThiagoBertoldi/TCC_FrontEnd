@@ -7,12 +7,12 @@
 
       <v-card-text class="d-flex flex-column">
         <v-col cols="12">
-          <v-row>
+          <v-row class="ga-2">
             <template v-for="(item, index) in podio" :key="item">
               <v-col cols="4" class="d-flex align-stretch">
-                <v-card class="d-flex justify-center align-center pa-2 w-100" @click="abreRespostaAluno(item)" style="cursor: pointer;">
+                <v-card class="d-flex justify-center align-center w-100" @click="abreRespostaAluno(item)"
+                  style="cursor: pointer;">
 
-                  <v-row class="d-flex align-center justify-center">
                     <v-col cols="3">
                       <v-img :src="getMedalha(index)" />
                     </v-col>
@@ -25,8 +25,6 @@
                         <p>{{ item.contador }} pts. </p>
                       </div>
                     </v-col>
-                  </v-row>
-
                 </v-card>
               </v-col>
             </template>
@@ -34,20 +32,20 @@
         </v-col>
 
         <v-col cols="12">
-          <template v-for="(item, index) in ranking" :key="item">
-            <v-card class="ma-2 d-flex justify-between" @click="abreRespostaAluno(item)" style="cursor: pointer;">
-              <v-col cols="1" class="d-flex justify-center align-center">
-                <p> {{ index + 4 }}° </p>
-              </v-col>
-              <v-col cols="9" class="d-flex justify-center flex-column">
-                <p>{{ item.nome }}</p>
-                <i style="font-size: 14px">{{ item?.titulo ?? 'Novato' }}</i>
-              </v-col>
-              <v-col cols="2" class="d-flex justify-center align-center">
-                <p>{{ item.contador }} pts.</p>
-              </v-col>
-            </v-card>
-          </template>
+            <template v-for="(item, index) in ranking" :key="item">
+              <v-card class="mt-2 d-flex justify-between" @click="abreRespostaAluno(item)" style="cursor: pointer;">
+                  <v-col cols="1" class="d-flex justify-center align-center">
+                    <p> {{ index + 4 }}° </p>
+                  </v-col>
+                  <v-col cols="9" class="d-flex justify-center flex-column">
+                    <p>{{ item.nome }}</p>
+                    <i style="font-size: 14px">{{ item?.titulo ?? 'Novato' }}</i>
+                  </v-col>
+                  <v-col cols="2" class="d-flex justify-center align-center">
+                    <p>{{ item.contador }} pts.</p>
+                  </v-col>
+              </v-card>
+            </template>
         </v-col>
       </v-card-text>
 
@@ -60,9 +58,7 @@
     </v-card>
   </v-dialog>
 
-  <CardRespostasAluno
-    ref="cardRespostas"
-  />
+  <CardRespostasAluno ref="cardRespostas" />
 </template>
 
 <script>
