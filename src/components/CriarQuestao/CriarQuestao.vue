@@ -127,7 +127,7 @@ export default {
             descricaoQuestao,
             listaRespostas: this.listaRespostas,
             idMateria: this.$route.params.id,
-            moedas: isNaN(moedas) ? 0 : moedas
+            moedas: isNaN(moedas) ? 0 : moedas > 100 ? 100 : moedas
          }
 
          this.typeButton ? this.salvaExistente(dto) : this.criarQuestao(dto)

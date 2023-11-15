@@ -1,8 +1,9 @@
 <template>
   <v-dialog v-model="show" max-width="1000px">
     <v-card>
-      <v-card-title class="ma-4">
+      <v-card-title class="ma-4 d-flex flex-column">
         <span class="text-h5">Ranking da Matéria</span>
+        <small><i>O ranking é definido com base na acertividade das questões</i></small>
       </v-card-title>
 
       <v-card-text class="d-flex flex-column">

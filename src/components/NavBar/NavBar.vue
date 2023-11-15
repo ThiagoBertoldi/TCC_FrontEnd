@@ -35,6 +35,9 @@
                <div v-if="routes?.notificacoes && this.$store.getters.getUser.type == 1" @click="openNotificacoes">
                   Notificações
                </div>
+               <div v-if="routes?.rankingGlobalMoedas" @click="openRankingGlobalMoedas">
+                  Ranking de Moedas
+               </div>
                <div v-if="routes?.ranking &&
                   $router.currentRoute.value.name == 'AulaAluno' ||
                   $router.currentRoute.value.name == 'Aulaprofessor'" @click="openRanking">
@@ -102,6 +105,8 @@
 
    <AlunosMateria ref="alunosMateria" />
 
+   <RankingGlobalMoedas ref="rankingMoedas" />
+
    <v-snackbar v-model="snackbar" :timeout="3000" :color="snackbar_success ? 'green' : 'red'">
       {{ snackbar_message }}
    </v-snackbar>
@@ -118,6 +123,7 @@ import MercadoAluno from '../Mercado/Aluno/MercadoAluno.vue'
 import Notificacao from '../Notificacao/Notificacao.vue'
 import Ranking from '../Ranking/Ranking.vue'
 import AlunosMateria from '../AlunosMateria/AlunosMateria.vue'
+import RankingGlobalMoedas from '../Ranking/RankingGlobalMoedas.vue'
 
 export default {
    data() {
@@ -167,6 +173,9 @@ export default {
       openModalAlunosMateria() {
          this.$refs.alunosMateria.openModal()
       },
+      openRankingGlobalMoedas() {
+         this.$refs.rankingMoedas.openModal()
+      },
       setMessageSnackBar(message, success) {
          this.snackbar = true
          this.snackbar_success = success
@@ -215,7 +224,8 @@ export default {
       MercadoAluno,
       Notificacao,
       Ranking,
-      AlunosMateria
+      AlunosMateria,
+      RankingGlobalMoedas
    },
    emits: ['atualizaPagina', 'salvarBoard', 'salvarAula', 'deleteBoard', 'salvaMercado']
 }
