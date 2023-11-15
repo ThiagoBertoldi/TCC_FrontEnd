@@ -38,7 +38,9 @@ export default {
             cadastrarMateria: true,
             perfilProfessor: true,
             cadastraAluno: true,
-            notificacoes: true
+            notificacoes: true,
+            rankingGlobalMoedas: true,
+            rankingGlobalXP: true
          },
          materias: [],
          snackbar: false,

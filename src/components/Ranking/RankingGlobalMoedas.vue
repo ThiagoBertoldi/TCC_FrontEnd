@@ -2,11 +2,12 @@
   <v-dialog v-model="show" max-width="1000px">
     <v-card>
       <v-card-title class="ma-4 d-flex flex-column">
-        <span class="text-h5">Ranking da Matéria</span>
-        <small><i>O ranking é definido com base na quantidade de moedas que o aluno tem em todas as matérias juntas</i></small>
+        <span class="text-h5">Ranking de Moedas Global</span>
       </v-card-title>
 
       <v-card-text class="d-flex flex-column">
+        <small class="mb-4 text-center"><i>O ranking é definido com base na quantidade de moedas que o aluno tem em todas
+            as matérias juntas</i></small>
         <v-col cols="12">
           <v-row class="ga-2">
             <template v-for="(item, index) in podio" :key="item">
@@ -57,6 +58,10 @@
       </v-card-actions>
     </v-card>
   </v-dialog>
+
+  <v-snackbar v-model="snackbar" :timeout="3000" color="red">
+    {{ error?.message }}
+  </v-snackbar>
 </template>
 
 <script>
@@ -66,14 +71,14 @@ export default {
     return {
       show: false,
       ranking: [],
-      podio: []
+      podio: [],
+      snackbar: false,
+      error: { message: null }
     }
   },
   methods: {
-    openModal(sender) {
+    openModal() {
       this.buscaRanking()
-
-      this.show = true
     },
     getMedalha(index) {
       switch (index) {
@@ -102,8 +107,18 @@ export default {
             if (index >= 3)
               return item
           })
+
+          this.show = true
         })
-        .catch(err => { })
+        .catch(err => {
+          this.show = false
+          this.error.message = err.response.data.data.message
+          this.snackbar = true
+
+          setTimeout(() => {
+            this.error.message = null
+          }, 3000);
+        })
     }
   }
 }

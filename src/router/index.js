@@ -100,8 +100,7 @@ const routes = [
     name: 'BuscaPerfilAluno',
     component: BuscaPerfilAluno,
     meta: {
-      requiresAuth: true,
-      typeUser: 2
+      requiresAuth: true
     }
   }
 ]
@@ -112,16 +111,21 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  const user = userStore.getters.getUser
+  const user = userStore.getters.getUser;
 
-  console.log(to.meta.typeUser)
+  if (to.meta.requiresAuth) {
+    if (!user?.token) {
+      return next('/');
+    }
 
-  if(to.meta.requiresAuth)
-    if(!user?.token || user?.type !== to.meta.typeUser)
-      return next('/')
+    if (to.meta.typeUser !== undefined && user?.type !== to.meta.typeUser) {
+      return next('/');
+    }
+  }
 
-  next()
-})
+  next();
+});
+
 
 
 export default router

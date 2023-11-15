@@ -43,6 +43,7 @@ export default {
   data() {
     return {
       rotasNavBar: {
+        home: true,
         homeAluno: true,
       },
       nome: '',
@@ -107,7 +108,6 @@ export default {
         this.calculaXp(response.data?.xp ?? 0)   
       })
       .catch(err => {
-        console.log(err)
         this.snackbar = true
         this.error.message = err.response.data.data.message
       })

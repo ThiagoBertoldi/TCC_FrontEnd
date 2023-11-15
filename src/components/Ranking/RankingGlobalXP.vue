@@ -2,29 +2,28 @@
   <v-dialog v-model="show" max-width="1000px">
     <v-card>
       <v-card-title class="ma-4 d-flex flex-column">
-        <span class="text-h5">Ranking da Matéria</span>
+        <span class="text-h5">Ranking de Experiência Global</span>
       </v-card-title>
 
       <v-card-text class="d-flex flex-column">
-        <small class="mb-4 text-center"><i>O ranking é definido com base na acertividade das questões nesta
-            matéria</i></small>
+        <small class="mb-4 text-center"><i>O ranking é definido com base na quantidade de experiência que o aluno
+            tem</i></small>
         <v-col cols="12">
           <v-row class="ga-2">
             <template v-for="(item, index) in podio" :key="item">
               <v-col cols="4" class="d-flex align-stretch">
-                <v-card class="d-flex justify-center align-center w-100" @click="abreRespostaAluno(item)"
-                  style="cursor: pointer;">
+                <v-card class="d-flex justify-center align-center w-100" @click="openPerfilAluno(item?.aluno[0]?._id)">
 
                   <v-col cols="3">
                     <v-img :src="getMedalha(index)" />
                   </v-col>
                   <v-col cols="9" class="d-flex flex-column">
                     <div>
-                      <p>{{ item.nome }}</p>
-                      <i style="font-size: 14px">{{ item?.titulo ?? 'Novato' }}</i>
+                      <p>{{ item?.aluno[0]?.username }}</p>
+                      <i style="font-size: 14px">{{ item?.titulo[0]?.titulo ?? 'Novato' }}</i>
                     </div>
                     <div class="d-flex justify-end">
-                      <p>{{ item.contador }} pts. </p>
+                      <p>{{ item.xp }} XP </p>
                     </div>
                   </v-col>
                 </v-card>
@@ -35,16 +34,16 @@
 
         <v-col cols="12">
           <template v-for="(item, index) in ranking" :key="item">
-            <v-card class="mt-2 d-flex justify-between" @click="abreRespostaAluno(item)" style="cursor: pointer;">
+            <v-card class="mt-2 d-flex justify-between" @click="openPerfilAluno(item._id)">
               <v-col cols="1" class="d-flex justify-center align-center">
                 <p> {{ index + 4 }}° </p>
               </v-col>
               <v-col cols="9" class="d-flex justify-center flex-column">
-                <p>{{ item.nome }}</p>
-                <i style="font-size: 14px">{{ item?.titulo ?? 'Novato' }}</i>
+                <p>{{ item?.aluno[0]?.username }}</p>
+                <i style="font-size: 14px">{{ item?.titulo[0]?.titulo ?? 'Novato' }}</i>
               </v-col>
               <v-col cols="2" class="d-flex justify-center align-center">
-                <p>{{ item.contador }} pts.</p>
+                <p>{{ item.xp }} XP</p>
               </v-col>
             </v-card>
           </template>
@@ -60,15 +59,12 @@
     </v-card>
   </v-dialog>
 
-  <CardRespostasAluno ref="cardRespostas" />
-
   <v-snackbar v-model="snackbar" :timeout="3000" color="red">
     {{ error?.message }}
   </v-snackbar>
 </template>
 
 <script>
-import CardRespostasAluno from '../CardRespostasAluno/CardRespostasAluno.vue'
 
 export default {
   data() {
@@ -81,7 +77,7 @@ export default {
     }
   },
   methods: {
-    openModal(sender) {
+    openModal() {
       this.buscaRanking()
     },
     getMedalha(index) {
@@ -96,20 +92,20 @@ export default {
           return ''
       }
     },
-    abreRespostaAluno(aluno) {
-      this.$refs.cardRespostas.openModal(aluno._id)
+    openPerfilAluno(aluno) {
+      this.$router.push({ name: 'BuscaPerfilAluno', params: { id: aluno } })
     },
     buscaRanking() {
-      let dto = { idMateria: this.$route.params.id }
-
-      this.$api.get('get-ranking', dto)
+      this.$api.get('get-ranking-global-xp', {})
         .then(response => {
-          this.ranking = response.data.filter((item, index) => {
-            if (index > 2) return item
+          this.podio = response.data.filter((item, index) => {
+            if (index < 3)
+              return item
           })
 
-          this.podio = response.data.filter((item, index) => {
-            if (index < 3) return item
+          this.ranking = response.data.filter((item, index) => {
+            if (index >= 3)
+              return item
           })
 
           this.show = true
@@ -124,9 +120,6 @@ export default {
           }, 3000);
         })
     }
-  },
-  components: {
-    CardRespostasAluno
   }
 }
 </script>

@@ -7,7 +7,7 @@
       </v-card-title>
 
       <v-card-text>
-        
+
         <v-row class="d-flex justify-center mb-2">
           <v-col class="d-flex justify-center">
             Questões: {{ this.acertos.total }}
@@ -21,7 +21,7 @@
         </v-row>
 
         <template v-for="item in respostas" :key="item">
-          <v-card :color="item.acerto ? 'green' : 'red' " class="ma-2 pa-2">
+          <v-card :color="item.acerto ? 'green' : 'red'" class="ma-2 pa-2">
             {{ item.descricao }}
           </v-card>
         </template>
@@ -47,6 +47,10 @@
       </v-card-actions>
     </v-card>
   </v-dialog>
+
+  <v-snackbar v-model="snackbar" :timeout="3000" color="red">
+    {{ error?.message }}
+  </v-snackbar>
 </template>
 
 <script>
@@ -58,33 +62,42 @@ export default {
       nome: null,
       respostas: [],
       acertos: {},
-      titulo: null
+      titulo: null,
+      snackbar: false,
+      error: { message: null }
     }
   },
   methods: {
     openModal(sender) {
       this.buscaRespostas(sender)
-
-      this.show = true
     },
     buscaRespostas(idAluno) {
       let dto = { idAluno, idMateria: this.$route.params.id }
 
       this.$api.get('respostas-aluno-materia', dto)
-      .then(response => {
-        this.nome = response.data.nome
-        this.titulo = response.data.titulo
+        .then(response => {
+          this.nome = response.data.nome
+          this.titulo = response.data.titulo
 
-        this.acertos = {
-          acertos: response.data.acertos,
-          erros: response.data.erros,
-          total: response.data.total,
-          moedas: response.data.moedas
-        }
+          this.acertos = {
+            acertos: response.data.acertos,
+            erros: response.data.erros,
+            total: response.data.total,
+            moedas: response.data.moedas
+          }
 
-        this.respostas = response.data.respostas
-      })
-      .catch(err => console.log(err))
+          this.respostas = response.data.respostas
+          this.show = true
+        })
+        .catch(err => {
+          this.show = false
+          this.error.message = err.response.data.data.message
+          this.snackbar = true
+
+          setTimeout(() => {
+            this.error.message = null
+          }, 3000);
+        })
     }
   }
 }

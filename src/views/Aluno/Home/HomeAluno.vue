@@ -38,7 +38,8 @@ export default {
          rotasNavBar: {
             perfil: true,
             perfilAluno: true,
-            rankingGlobalMoedas: true
+            rankingGlobalMoedas: true,
+            rankingGlobalXP: true
          },
          materias: []
       }
