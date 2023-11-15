@@ -11,16 +11,19 @@
                            d="M16 8C16 10.21 14.21 12 12 12C9.79 12 8 10.21 8 8L8.11 7.06L5 5.5L12 2L19 5.5V10.5H18V6L15.89 7.06L16 8M12 14C16.42 14 20 15.79 20 18V20H4V18C4 15.79 7.58 14 12 14Z" />
                      </svg>
                   </div>
-                  <div style="color: #fff; margin-top: 20px" class="d-flex align-center flex-column">
+                  <v-col style="color: #fff; margin-top: 20px" class="d-flex align-center flex-column">
                      <p>{{ $store.getters.getUser.username }}</p>
                      <i>{{ $store.getters.getUser.email }}</i>
-                     <p> {{ titulo }} </p>
-                  </div>
+                     <div class="levelBar">
+                        Lvl 5   
+                     </div>
+                     <p>{{ titulo }}</p>
+                  </v-col>
                </v-col>
                <v-col cols="5" class="d-flex align-center flex-column">
                   <h2 style="color: white">Títulos</h2>
                   <div style="width: 100%; max-height: 300px; overflow: auto">
-                     <template v-for="item in titulos" :key="item.nomeMateria">
+                     <template v-for="item in titulos" :key="item">
                         <v-card class="ma-2">
                            <v-card-text @click="selecTitulo(item)">
                               {{ item.descricao }}
@@ -113,3 +116,19 @@ export default {
    }
 }
 </script>
+
+<style scoped>
+.levelBar{
+   width: 100%;
+   height: 30px;
+   background-color: aqua;
+   color: black;
+   margin: 10px;
+   padding: 6px;
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   border-radius: 15px;
+}
+
+</style>
