@@ -13,20 +13,26 @@
                   </div>
                   <v-col style="color: #fff; margin-top: 20px" class="d-flex align-center flex-column">
                      <p>{{ $store.getters.getUser.username }}</p>
-                     <i>{{ $store.getters.getUser.email }}</i>
-                     <div class="levelBar">
-                        Lvl 5   
+
+                     <p>Lvl {{ nivelAtual }}</p>
+                     <div class="xp-bar">
+                        <div class="xp-bar-inner"
+                           :style="{ backgroundColor: sorteiaCor(), width: porcentagemBarraXp + '%' }">
+                           <div class="xp-bar-level">{{ porcentagemBarraXp.toFixed(0) }}%</div>
+                        </div>
                      </div>
-                     <p>{{ titulo }}</p>
+                     <small>Você tem {{ xpTotal }} de XP, necessário mais {{ xpFaltante }} de XP para o próximo nível</small>
+                     <p class="mt-4">Conhecido como <i>"{{ titulo }}"</i></p>
                   </v-col>
                </v-col>
                <v-col cols="5" class="d-flex align-center flex-column">
                   <h2 style="color: white">Títulos</h2>
                   <div style="width: 100%; max-height: 300px; overflow: auto">
-                     <template v-for="item in titulos" :key="item">
+                     <template v-for="(item, index) in titulos" :key="item">
                         <v-card class="ma-2">
-                           <v-card-text @click="selecTitulo(item)">
-                              {{ item.descricao }}
+                           <v-card-text @click="selecTitulo(item, index + 1)">
+                              <div>{{ item.descricao }}</div>
+                              <small>Você precisa ser Lvl {{ index + 1 }} para usar esse título</small>
                            </v-card-text>
                         </v-card>
                      </template>
@@ -64,6 +70,14 @@
          </v-col>
       </v-row>
    </div>
+
+   <v-snackbar
+         v-model="snackbar"
+         :timeout="3000"
+         color="red"
+      >
+         {{ error?.message }}
+      </v-snackbar>
 </template>
 
 <script>
@@ -77,31 +91,87 @@ export default {
          },
          titulos: [],
          titulo: 'Título',
-         extratos: []
+         extratos: [],
+         nivelAtual: 0,
+         xpFaltante: 0,
+         porcentagemBarraXp: 0,
+         xpTotal: 0,
+         snackbar: false,
+         error: { message: null }
       }
    },
    methods: {
-      selecTitulo(titulo) {
-         this.$api.post('define-titulo', { titulo: titulo.descricao })
-            .then(() => {
-               this.getTitulo()
-            })
-            .catch(err => console.log(err))
+      sorteiaCor() {
+         let numero = Math.floor(Math.random() * (10)) + 1;
+
+         return {
+            1: 'orange',
+            2: 'green',
+            3: 'pink',
+            4: 'blue',
+            5: 'cyan',
+            6: 'amber',
+            7: 'purple',
+            8: 'red',
+            9: 'brown',
+            10: 'grey'
+         }[numero] || 'black'
       },
-      getTitulo() {
+      selecTitulo(titulo, lvl) {
+         if(this.nivelAtual >= lvl) {
+            this.$api.post('define-titulo', { titulo: titulo.descricao })
+               .then(() => {
+                  this.getTitulo()
+               })
+               .catch(err => console.log(err))
+         } else {
+            this.snackbar = true
+            this.error.message = "Você não tem nível suficiente para usar esse título"
+         }
+      },
+      async getTitulo() {
          this.$api.get('get-titulo', {})
             .then(response => { this.titulo = response.data.titulo })
-            .catch(err => { return 'Error' })
+            .catch(err => { console.log(err) })
       },
-      getTitulos() {
+      async getTitulos() {
          this.$api.get('get-titulos', null)
             .then(response => this.titulos = response.data)
             .catch(err => console.log(err))
       },
-      getExtrato() {
+      async getExtrato() {
          this.$api.get('get-extrato', {})
             .then(response => this.extratos = response.data.objetosFinais)
             .catch(err => console.log(err))
+      },
+      async getXpAluno() {
+         this.$api.get('get-xp', {})
+            .then(response => this.calculaXp(response.data.xp))
+            .catch(err => console.log(err))
+      },
+      calculaXp(xp = 0) {
+         this.xpTotal = xp
+
+         let qntdXp = 50
+         let totalXpProximoNivel = 0
+         let qntdXpUltimoLvl = 0
+         let continua = true
+         let qntdXpFaltante = 0
+
+         do {
+            xp = xp - qntdXp
+            qntdXpFaltante = xp - (qntdXp * -1)
+            if(xp < 0)
+               continua = false
+            
+            this.nivelAtual++
+            qntdXpUltimoLvl = totalXpProximoNivel
+            totalXpProximoNivel += qntdXp
+            qntdXp += 10
+         }while(continua)
+
+         this.porcentagemBarraXp = (qntdXpFaltante * 100) / (totalXpProximoNivel - qntdXpUltimoLvl)
+         this.xpFaltante = totalXpProximoNivel - this.xpTotal
       }
    },
    async mounted() {
@@ -109,6 +179,7 @@ export default {
       await this.getTitulo()
       await this.getTitulos()
       await this.getExtrato()
+      await this.getXpAluno()
 
    },
    components: {
@@ -118,17 +189,29 @@ export default {
 </script>
 
 <style scoped>
-.levelBar{
-   width: 100%;
+.xp-bar {
+   width: 60%;
    height: 30px;
-   background-color: aqua;
-   color: black;
-   margin: 10px;
-   padding: 6px;
-   display: flex;
-   justify-content: center;
-   align-items: center;
+   background-color: #ccc;
    border-radius: 15px;
+   display: flex;
+   align-items: center;
 }
 
+.xp-bar-inner {
+   min-width: 50px;
+   height: 100%;
+   background-color: #000;
+   border-radius: 15px;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+}
+
+.xp-bar-level {
+   align-self: center;
+   text-align: center;
+   font-size: 16px;
+   color: #fff;
+}
 </style>
