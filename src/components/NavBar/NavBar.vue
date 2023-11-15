@@ -43,12 +43,14 @@
                <div v-if="routes?.voltarParaMateria" @click="voltaParaMateria">
                   Voltar
                </div>
-               <div v-if="routes?.perfilProfessor && this.$store.getters.getUser.type == 1" @click="goToPerfil">
-                  Perfil
-               </div>
-
                <div v-if="routes?.mercadoAluno && this.$store.getters.getUser.type == 2" @click="abreMercadoAluno">
                   Mercado
+               </div>
+               <div v-if="routes?.exibirAlunosMateria" @click="openModalAlunosMateria">
+                  Alunos
+               </div>
+               <div v-if="routes?.perfilProfessor && this.$store.getters.getUser.type == 1" @click="goToPerfil">
+                  Perfil
                </div>
                <div v-if="routes?.perfilAluno && this.$store.getters.getUser.type == 2" @click="goToPerfilAluno">
                   Perfil
@@ -98,6 +100,8 @@
 
    <Ranking ref="openRanking" />
 
+   <AlunosMateria ref="alunosMateria" />
+
    <v-snackbar v-model="snackbar" :timeout="3000" :color="snackbar_success ? 'green' : 'red'">
       {{ snackbar_message }}
    </v-snackbar>
@@ -113,6 +117,7 @@ import AdicionaAlunoMateria from '../AdicionaAlunoMateria/AdicionaAlunoMateria.v
 import MercadoAluno from '../Mercado/Aluno/MercadoAluno.vue'
 import Notificacao from '../Notificacao/Notificacao.vue'
 import Ranking from '../Ranking/Ranking.vue'
+import AlunosMateria from '../AlunosMateria/AlunosMateria.vue'
 
 export default {
    data() {
@@ -158,6 +163,9 @@ export default {
       },
       openRanking() {
          this.$refs.openRanking.openModal()
+      },
+      openModalAlunosMateria() {
+         this.$refs.alunosMateria.openModal()
       },
       setMessageSnackBar(message, success) {
          this.snackbar = true
@@ -206,7 +214,8 @@ export default {
       AdicionaAlunoMateria,
       MercadoAluno,
       Notificacao,
-      Ranking
+      Ranking,
+      AlunosMateria
    },
    emits: ['atualizaPagina', 'salvarBoard', 'salvarAula', 'deleteBoard', 'salvaMercado']
 }

@@ -5,7 +5,7 @@
             <span class="text-h5">Notificações</span>
          </v-card-title>
          <v-card-text>
-            <template v-for="item in notificacoes">
+            <template v-for="item in notificacoes" :key="item">
                <v-card class="ma-2 pa-4">
                   <v-row>
                      <v-col>

@@ -19,7 +19,8 @@ export default {
             homeAluno: true,
             mercadoAluno: true,
             perfilAluno: true,
-            ranking: true
+            ranking: true,
+            exibirAlunosMateria: true
          },
          classBg: null,
          canvasHeight: 0

@@ -10,6 +10,7 @@ import PerfilProfessor from '../views/Professor/Perfil/Perfil.vue'
 import AulaAluno from '../views/Aluno/Aula/AulaAluno.vue'
 import BoardAluno from '../views/Aluno/Board/BoardAluno.vue'
 import PerfilAluno from '../views/Aluno/Perfil/PerfilAluno.vue'
+import BuscaPerfilAluno from '../views/Aluno/Perfil/BuscaPerfilAluno.vue'
 
 const routes = [
   {
@@ -93,6 +94,15 @@ const routes = [
       requiresAuth: true,
       typeUser: 2
     }
+  },
+  {
+    path: '/busca-perfil-aluno/:id',
+    name: 'BuscaPerfilAluno',
+    component: BuscaPerfilAluno,
+    meta: {
+      requiresAuth: true,
+      typeUser: 2
+    }
   }
 ]
 
@@ -103,6 +113,8 @@ const router = createRouter({
 
 router.beforeEach((to, from, next) => {
   const user = userStore.getters.getUser
+
+  console.log(to.meta.typeUser)
 
   if(to.meta.requiresAuth)
     if(!user?.token || user?.type !== to.meta.typeUser)

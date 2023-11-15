@@ -32,7 +32,6 @@ export default {
       openModal(sender) {
          this.show = true
          this.model = sender
-         console.log(sender)
       },
       confirmaEntrega() {
          this.$emit('confirmaEntrega', this.model)
