@@ -43,7 +43,7 @@
                </div>
                <div v-if="routes?.ranking &&
                   $router.currentRoute.value.name == 'AulaAluno' ||
-                  $router.currentRoute.value.name == 'Aulaprofessor'" @click="openRanking">
+                  $router.currentRoute.value.name == 'AulaProfessor'" @click="openRanking">
                   Ranking
                </div>
                <div v-if="routes?.voltarParaMateria" @click="voltaParaMateria">
@@ -81,36 +81,34 @@
          <v-col cols="2" class="d-flex justify-center" v-if="$router.currentRoute.value.name == 'AulaAluno'">
             <div v-if="$router.currentRoute.value.name == 'AulaAluno' && this.$store.getters.getUser.type == 2"
                style="color: gold;">
-               Moedas: R$ {{ $store.getters.getMoedas }}
+               Moedas: TROCAR SIMBOLO {{ $store.getters.getMoedas }}
             </div>
          </v-col>
       </nav>
    </div>
-   <CriaMateria @success_snackbar="setMessageSnackBar" @error_snackbar="setMessageSnackBar"
-      @atualizaPagina="atualizaPagina" ref="criarMateria" />
+   <CriaMateria @snackbar="setMessageSnackBar" @atualizaPagina="atualizaPagina" ref="criarMateria" />
 
-   <CriaAula @success_snackbar="setMessageSnackBar" @error_snackbar="setMessageSnackBar" @atualizaPagina="atualizaPagina"
-      ref="criaAula" />
+   <CriaAula @snackbar="setMessageSnackBar" @atualizaPagina="atualizaPagina" ref="criaAula" />
 
-   <AdicionaAlunoMateria ref="adicionaAlunoMateria" />
+   <AdicionaAlunoMateria @snackbar="setMessageSnackBar" ref="adicionaAlunoMateria" />
 
-   <CriarQuestao ref="criaQuestao" />
+   <CriarQuestao @snackbar="setMessageSnackBar" @atualizaPagina="atualizaPagina" ref="criaQuestao" />
 
-   <MercadoAula ref="mercadoAula" />
+   <MercadoAula @snackbar="setMessageSnackBar" ref="mercadoAula" />
 
-   <CadastraAluno ref="cadastraAluno" />
+   <CadastraAluno @snackbar="setMessageSnackBar" ref="cadastraAluno" />
 
-   <Notificacao ref="notificacao" />
+   <Notificacao @snackbar="setMessageSnackBar" ref="notificacao" />
 
-   <MercadoAluno ref="mercadoAluno" />
+   <MercadoAluno @snackbar="setMessageSnackBar" ref="mercadoAluno" />
 
-   <Ranking ref="openRanking" />
+   <Ranking @snackbar="setMessageSnackBar" ref="openRanking" />
 
-   <AlunosMateria ref="alunosMateria" />
+   <AlunosMateria @snackbar="setMessageSnackBar" ref="alunosMateria" />
 
-   <RankingGlobalMoedas ref="rankingMoedas" />
+   <RankingGlobalMoedas @snackbar="setMessageSnackBar" ref="rankingMoedas" />
 
-   <RankingGlobalXP ref="rankingXP" />
+   <RankingGlobalXP @snackbar="setMessageSnackBar" ref="rankingXP" />
 
    <v-snackbar v-model="snackbar" :timeout="3000" :color="snackbar_success ? 'green' : 'red'">
       {{ snackbar_message }}
@@ -237,6 +235,6 @@ export default {
       RankingGlobalMoedas,
       RankingGlobalXP
    },
-   emits: ['atualizaPagina', 'salvarBoard', 'salvarAula', 'deleteBoard', 'salvaMercado']
+   emits: ['atualizaPagina', 'salvarBoard', 'salvarAula', 'deleteBoard', 'salvaMercado', 'confirmDeleteBoard']
 }
 </script>

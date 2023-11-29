@@ -60,7 +60,6 @@ export default {
             .catch(err => {
                this.snackbar = true
                this.snackbar_message = err.response.data.data.message
-               setTimeout(() => this.$router.back(), 1500)
             })
       },
       goToAulaProfessor(id_materia) {

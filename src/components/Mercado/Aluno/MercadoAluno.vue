@@ -61,7 +61,7 @@ export default {
             .then(response => {
                this.itensMercado = response.data.itensMercado
             })
-            .catch(err => console.log(err))
+            .catch(err => this.$emit('snackbar', err.response.data.data.message, false))
       },
       comprarItem(item) {
          this.$refs.confirmaCompra.openModal(item)
@@ -76,14 +76,13 @@ export default {
          }
 
          this.$api.post('comprar-item', dto)
-            .then(response => {
-               this.show = false
-            })
-            .catch(err => console.log(err))
+            .then(() => this.show = false)
+            .catch(err => this.$emit('snackbar', err.response.data.data.message, false))
       }
    },
    components: {
       ConfirmaCompra
-   }
+   },
+   emits: ['snackbar']
 }
 </script>

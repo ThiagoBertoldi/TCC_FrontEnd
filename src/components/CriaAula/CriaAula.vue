@@ -65,11 +65,11 @@ export default {
          await this.$api.post('create-aula', newAula)
          .then(() => {
             this.show = false
-            this.$emit('success_snackbar', 'Aula criada com sucesso!', true)
+            this.$emit('snackbar', 'Aula criada com sucesso!', true)
             this.$emit('atualizaPagina', null)
          })
          .catch(() => {
-            this.$emit('error_snackbar', 'Não foi possível criar a aula', false)
+            this.$emit('snackbar', 'Não foi possível criar a aula', false)
          })
       }
    }

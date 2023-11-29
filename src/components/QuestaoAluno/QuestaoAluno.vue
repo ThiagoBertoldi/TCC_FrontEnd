@@ -62,7 +62,7 @@ export default {
                this.listaRespostas = response.data.listaRespostas
                this.show = true;
             })
-            .catch(err => { })
+            .catch(err => this.$emit('snackbar', err.response.data.data.message, false))
       },
       selecionaQuestao(resposta, e) {
          this.questaoSelecionada = resposta
@@ -82,12 +82,12 @@ export default {
          }
 
          this.$api.post('valida-questao', dto)
-         .then(response => {
+         .then(() => {
             this.show = false
             this.model = {}
             this.$emit('refresh', null)
          })
-         .catch(err => console.log(err))
+         .catch(err => this.$emit('snackbar', err.response.data.data.message, false))
       }
    }
 }

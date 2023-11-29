@@ -21,7 +21,8 @@
                            <div class="xp-bar-level">{{ porcentagemBarraXp.toFixed(0) }}%</div>
                         </div>
                      </div>
-                     <small>Você tem {{ xpTotal }} de XP, necessário mais {{ xpFaltante }} de XP para o próximo nível</small>
+                     <small>Você tem {{ xpTotal }} de XP, necessário mais {{ xpFaltante }} de XP para o próximo
+                        nível</small>
                      <p class="mt-4">Conhecido como <i>"{{ titulo }}"</i></p>
                   </v-col>
                </v-col>
@@ -71,13 +72,9 @@
       </v-row>
    </div>
 
-   <v-snackbar
-         v-model="snackbar"
-         :timeout="3000"
-         color="red"
-      >
-         {{ error?.message }}
-      </v-snackbar>
+   <v-snackbar v-model="snackbar" :timeout="3000" color="red">
+      {{ error?.message }}
+   </v-snackbar>
 </template>
 
 <script>
@@ -118,12 +115,15 @@ export default {
          }[numero] || 'black'
       },
       selecTitulo(titulo, lvl) {
-         if(this.nivelAtual >= lvl) {
+         if (this.nivelAtual >= lvl) {
             this.$api.post('define-titulo', { titulo: titulo.descricao })
                .then(() => {
                   this.getTitulo()
                })
-               .catch(err => console.log(err))
+               .catch(err => {
+                  this.snackbar = true
+                  this.error.message = err.response.data.data.message
+               })
          } else {
             this.snackbar = true
             this.error.message = "Você não tem nível suficiente para usar esse título"
@@ -132,22 +132,34 @@ export default {
       async getTitulo() {
          this.$api.get('get-titulo', {})
             .then(response => { this.titulo = response.data.titulo })
-            .catch(err => { console.log(err) })
+            .catch(err => {
+               this.snackbar = true
+               this.error.message = err.response.data.data.message
+            })
       },
       async getTitulos() {
          this.$api.get('get-titulos', null)
             .then(response => this.titulos = response.data)
-            .catch(err => console.log(err))
+            .catch(err => {
+               this.snackbar = true
+               this.error.message = err.response.data.data.message
+            })
       },
       async getExtrato() {
          this.$api.get('get-extrato', {})
             .then(response => this.extratos = response.data.objetosFinais)
-            .catch(err => console.log(err))
+            .catch(err => {
+               this.snackbar = true
+               this.error.message = err.response.data.data.message
+            })
       },
       async getXpAluno() {
          this.$api.get('get-xp', {})
             .then(response => this.calculaXp(response.data.xp))
-            .catch(err => console.log(err))
+            .catch(err => {
+               this.snackbar = true
+               this.error.message = err.response.data.data.message
+            })
       },
       calculaXp(xp = 0) {
          this.xpTotal = xp
@@ -161,14 +173,14 @@ export default {
          do {
             xp = xp - qntdXp
             qntdXpFaltante = xp - (qntdXp * -1)
-            if(xp < 0)
+            if (xp < 0)
                continua = false
-            
+
             this.nivelAtual++
             qntdXpUltimoLvl = totalXpProximoNivel
             totalXpProximoNivel += qntdXp
             qntdXp += 10
-         }while(continua)
+         } while (continua)
 
          this.porcentagemBarraXp = (qntdXpFaltante * 100) / (totalXpProximoNivel - qntdXpUltimoLvl)
          this.xpFaltante = totalXpProximoNivel - this.xpTotal

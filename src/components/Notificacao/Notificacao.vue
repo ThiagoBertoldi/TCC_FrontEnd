@@ -22,7 +22,7 @@
                   </v-row>
                   <v-row>
                      <v-col>
-                        Matéria: {{ item.materia }}                       
+                        Matéria: {{ item.materia }}
                      </v-col>
                      <v-col class="d-flex justify-end">
                         Turma: {{ item.turma }}
@@ -71,25 +71,24 @@ export default {
          this.buscaNotificacoes()
       },
       buscaNotificacoes() {
-         this.$api.get('notificacoes-professor', {  })
-         .then(response => {
-            this.notificacoes = response.data
-         })
-         .catch(err => console.log(err))
+         this.$api.get('notificacoes-professor', {})
+            .then(response => {
+               this.notificacoes = response.data
+            })
+            .catch(err => this.$emit('snackbar', err.response.data.data.message, false))
       },
       confirmarRemoverNotificação(item) {
          this.$refs.confirmaExclusao.openModal(item)
       },
       confirmaEntrega(model) {
          this.$api.post('exclusao-notificacao', { idNotificacao: model._id })
-         .then(response => {
-            this.buscaNotificacoes()
-         })
-         .catch(err => console.log(err))
+            .then(() => this.buscaNotificacoes())
+            .catch(err => this.$emit('snackbar', err.response.data.data.message, false))
       }
    },
    components: {
       ConfirmaExclusao
-   }
+   },
+   emits: ['snackbar']
 }
 </script>

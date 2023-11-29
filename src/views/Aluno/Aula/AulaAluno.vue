@@ -1,9 +1,13 @@
 <template>
    <NavBar :routes="rotasNavBar" ref="navBarRef" />
    <div class="canvas" :style="{ height: canvasHeight + 'px' }">
-         <img id="bgImg" style="width: 100%; height: 100%;" />
-      </div>
+      <img id="bgImg" style="width: 100%; height: 100%;" />
+   </div>
    <QuestaoAluno ref="questaoAluno" @refresh="refresh" />
+
+   <v-snackbar v-model="snackbar" :timeout="5000" :color="error ? 'red' : 'green'">
+      {{ mensagem ?? '' }}
+   </v-snackbar>
 </template>
 
 <script>
@@ -23,7 +27,10 @@ export default {
             exibirAlunosMateria: true
          },
          classBg: null,
-         canvasHeight: 0
+         canvasHeight: 0,
+         snackbar: false,
+         mensagem: null,
+         error: false
       }
    },
    methods: {
@@ -43,7 +50,11 @@ export default {
                      }
                   })
             })
-            .catch(err => { })
+            .catch(err => {
+               this.error = true
+               this.message = err.response.data.data.message
+               this.snackbar = true
+            })
       },
       refresh() {
          this.buscaAulas()
@@ -57,7 +68,11 @@ export default {
             .then(async response => {
                img.src = response.data.backgroundBase64
             })
-            .catch(err => console.log(err))
+            .catch(err => {
+               this.error = true
+               this.message = err.response.data.data.message
+               this.snackbar = true
+            })
       },
       criaElementClass(num, aula, respondida) {
          let canvas = document.querySelector('.canvas')
@@ -106,7 +121,7 @@ export default {
       },
       calculateCanvasHeight() {
          const navBarHeight = this.$refs.navBarRef?.$el.parentNode.clientHeight;
-         if(!navBarHeight) return
+         if (!navBarHeight) return
 
          this.canvasHeight = window.innerHeight - navBarHeight;
       },

@@ -3,10 +3,11 @@
       <NavBar @atualizaPagina="atualizaPagina" @salvarAula="salvarAula" :routes="rotasNavBar" />
       <input class="btn-troca-bg" type="file" @change="getImage" />
       <div class="canvas" :style="{ backgroundImage: 'url(' + classBg + ')', backgroundSize: '100% 100%' }"></div>
-      <CriarQuestao 
-         ref="attQuestao"
-      />
+      <CriarQuestao ref="attQuestao" />
    </div>
+   <v-snackbar v-model="snackbar" :timeout="5000" :color="error ? 'red' : 'green'">
+      {{ mensagem ?? '' }}
+   </v-snackbar>
 </template>
 
 <script>
@@ -22,11 +23,14 @@ export default {
             cadastrarAula: true,
             cadastraQuestao: true,
             mercadoAula: true,
+            ranking: true,
             classSave: true,
             adicionaAlunoMateria: true
          },
          classBg: null,
-         montado: false
+         snackbar: false,
+         mensagem: null,
+         error: false
       }
    },
    methods: {
@@ -38,16 +42,19 @@ export default {
                while (canvas.firstChild)
                   canvas.removeChild(canvas.firstChild);
 
-               if(response.data instanceof Array) {
+               if (response.data instanceof Array) {
                   response.data.map((aula, index) => {
                      this.criaElementClass(index, aula)
                   })
 
                   this.setBackground()
-                  this.salvarAula()
                }
             })
-            .catch(err => { })
+            .catch(err => {
+               this.error = true
+               this.message = err.response.data.data.message
+               this.snackbar = true
+            })
       },
       atualizaPagina() {
          const { id } = this.$route.params
@@ -72,10 +79,14 @@ export default {
          let dto = { idMateria: this.$route.params.id }
 
          await this.$api.post('get-background', dto)
-         .then(response => {
-            canvas.style.backgroundImage = `url('${response.data.backgroundBase64}')`
-         })
-         .catch(err => console.log(err))
+            .then(response => {
+               canvas.style.backgroundImage = `url('${response.data.backgroundBase64}')`
+            })
+            .catch(err => {
+               this.error = true
+               this.message = err.response.data.data.message
+               this.snackbar = true
+            })
       },
       criaElementClass(num, aula) {
          let canvas = document.querySelector('.canvas')
@@ -103,7 +114,7 @@ export default {
 
          element.appendChild(numElement)
 
-         if(aula.tipoAula === 1) {
+         if (aula.tipoAula === 1) {
             element.addEventListener('dblclick', () => this.$router.push({ name: 'BoardProfessor', params: { id: aula.idBoard } }))
          } else {
             element.addEventListener('dblclick', () => this.$refs.attQuestao.openModal(aula))
@@ -134,7 +145,7 @@ export default {
          }
 
          let backgroundBase64 = window.getComputedStyle(canvas).backgroundImage.replace('url("', '').replace('")', '') ?? null
-         
+
          let dto = {
             elementsSave,
             backgroundBase64: this.classBg ?? backgroundBase64,
@@ -142,8 +153,16 @@ export default {
          }
 
          this.$api.post('salva-aulas', dto)
-         .then(resp => console.log(resp))
-         .catch(err => console.log(err))
+            .then(() => {
+               this.snackbar = true
+               this.error = false
+               this.mensagem = "Aula salva com sucesso"
+            })
+            .catch(err => {
+               this.snackbar = true
+               this.error = true
+               this.mensagem = err.response.data.data.message
+            })
 
       }
    },

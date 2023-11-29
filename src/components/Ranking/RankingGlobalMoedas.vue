@@ -58,10 +58,6 @@
       </v-card-actions>
     </v-card>
   </v-dialog>
-
-  <v-snackbar v-model="snackbar" :timeout="3000" color="red">
-    {{ error?.message }}
-  </v-snackbar>
 </template>
 
 <script>
@@ -110,16 +106,9 @@ export default {
 
           this.show = true
         })
-        .catch(err => {
-          this.show = false
-          this.error.message = err.response.data.data.message
-          this.snackbar = true
-
-          setTimeout(() => {
-            this.error.message = null
-          }, 3000);
-        })
+        .catch(err => this.$emit('snackbar', err.response.data.data.message, false))
     }
-  }
+  },
+  emits: ['snackbar']
 }
 </script>

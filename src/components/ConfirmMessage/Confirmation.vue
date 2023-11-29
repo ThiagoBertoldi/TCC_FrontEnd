@@ -36,6 +36,7 @@ export default {
          this.$emit('confirmDeleteBoard')
          this.show = false
       }
-   }
+   },
+   emits: [ 'confirmDeleteBoard' ]
 }
 </script>

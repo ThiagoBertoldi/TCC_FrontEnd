@@ -52,15 +52,16 @@ export default {
          }
 
          await this.$api.post('create-materia', newMateria)
-         .then(() => {
-            this.show = false
-            this.$emit('success_snackbar', 'Matéria criada com sucesso!', true)
-            this.$emit('atualizaPagina', null)
-         })
-         .catch(() => {
-            this.$emit('error_snackbar', 'Não foi possível criar a matéria', false)
-         })
+            .then(() => {
+               this.show = false
+               this.$emit('snackbar', 'Matéria criada com sucesso!', true)
+               this.$emit('atualizaPagina', null)
+            })
+            .catch(() => {
+               this.$emit('snackbar', 'Não foi possível criar a matéria', false)
+            })
       }
-   }
+   },
+   emits: ['snackbar']
 }
 </script>

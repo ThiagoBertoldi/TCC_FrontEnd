@@ -41,7 +41,8 @@ export default {
       }
    },
    methods: {
-      openModal(sender) {
+      openModal() {
+         this.model = {}
          this.show = true
       },
       cadastrarAluno() {
@@ -51,11 +52,12 @@ export default {
          }
 
          this.$api.post('create-aluno', { ...dto })
-         .then(response => {
+         .then(() => {
             this.show = false
             this.model = {}
+            this.$emit('snackbar', 'Aluno cadastrado com sucesso!', true)
          })
-         .catch(err => console.log(err))
+         .catch(err => this.$emit('snackbar', err.response.data.data.message, false))
       }
    }
 }

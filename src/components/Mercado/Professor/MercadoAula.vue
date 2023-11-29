@@ -6,7 +6,7 @@
          </v-card-title>
 
          <v-card-text>
-            <template v-for="item in itensMercado">
+            <template v-for="item in itensMercado" :key="item">
                <v-row class="perguntas">
                   <v-col cols="1" class="d-flex align-center">
                      <v-icon :style="{ cursor: 'pointer' }" @click="removerItemMercado(item)" >
@@ -73,7 +73,7 @@ export default {
                   }
                }
             })
-            .catch(err => console.log(err))
+            .catch(err => this.$emit('snackbar', err.response.data.data.message, false))
 
          this.show = true
       },
@@ -96,10 +96,17 @@ export default {
          }
 
          this.$api.post('att-mercado', dto)
+         .then(() => {
+            this.show = false
+            this.itensMercado = []
+            this.$emit('snackbar', 'Mercado atualizado com sucesso', true)
+         })
+         .catch(err => this.$emit('snackbar', err.response.data.data.message, false))
       }
    },
    components: {
       AddItemMercado
-   }
+   },
+   emits: ['snackbar']
 }
 </script>

@@ -47,6 +47,10 @@
          </v-row>
       </div>
    </div>
+
+   <v-snackbar v-model="snackbar" :timeout="3000" :color="error ? 'red' : 'green'">
+      {{ message }}
+   </v-snackbar>
 </template>
 
 <script>
@@ -61,7 +65,10 @@ export default {
             boardSave: true,
             deleteBoard: true,
             voltarParaMateria: true
-         }
+         },
+         snackbar: false,
+         message: null,
+         error: false
       }
    },
    methods: {
@@ -109,10 +116,14 @@ export default {
          let idBoard = this.$route.params.id
 
          this.$api.post('delete-board', { idBoard })
-         .then(() => {
-            this.$router.back()
-         })
-         .catch(err => console.log(err))
+            .then(() => {
+               this.$router.back()
+            })
+            .catch(err => {
+               this.error = true
+               this.message = err.response.data.data.message
+               this.snackbar = true
+            })
       },
       async salvaArrowComponent(element, side) {
          let posicaoX = element.offsetTop;
@@ -147,6 +158,7 @@ export default {
                .then(response => response.blob())
                .then(blob => {
                   const reader = new FileReader()
+                  
                   reader.onloadend = () => {
                      let imageBase64 = reader.result
                      let posicaoX = element.offsetTop;
@@ -163,7 +175,11 @@ export default {
 
                   reader.readAsDataURL(blob)
                })
-               .catch(err => console.log(err))
+               .catch(err => {
+                  this.error = true
+                  this.message = err.response.data.data.message
+                  this.snackbar = true
+               })
          })
       },
       gravaComponentsBoard(dto) {
@@ -205,11 +221,16 @@ export default {
                this.getElementMethods(element.component.type, canvas, element)
             })
          })
-         .catch(err => { })
+         .catch(err => {
+            this.error = true
+            this.message = err.response.data.data.message
+            this.snackbar = true
+         })
    },
    components: {
       NavBar,
       ConfirmDialog
-   }
+   },
+   emits: ['confirmDeleteBoard']
 }
 </script>

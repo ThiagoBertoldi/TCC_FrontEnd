@@ -25,6 +25,9 @@
          </template>
       </v-row>
 
+      <v-snackbar v-model="snackbar" :timeout="5000" :color="error ? 'red' : 'green'">
+         {{ mensagem ?? '' }}
+      </v-snackbar>
    </div>
 </template>
 
@@ -41,7 +44,10 @@ export default {
             rankingGlobalMoedas: true,
             rankingGlobalXP: true
          },
-         materias: []
+         materias: [],
+         snackbar: false,
+         mensagem: null,
+         error: false
       }
    },
    methods: {
@@ -61,7 +67,11 @@ export default {
          .then(response => {
             this.materias = response.data
          })
-         .catch(err => { console.log(err) })
+         .catch(err => {
+            this.error = true
+            this.message = err.response.data.data.message
+            this.snackbar = true
+         })
    },
    components: {
       NavBar

@@ -37,9 +37,6 @@
       </v-card-actions>
     </v-card>
   </v-dialog>
-  <v-snackbar v-model="snackbar" :timeout="3000" color="red">
-    {{ error?.message }}
-  </v-snackbar>
 </template>
 
 <script>
@@ -65,11 +62,7 @@ export default {
           this.alunos = response.data
           this.show = true
         })
-        .catch(err => {
-          this.snackbar = true
-          this.error.message = err.response.data.data.message
-          this.show = false
-        })
+        .catch(err => this.$emit('snackbar', err.response.data.data.message, false))
     },
     openPerfilAluno(aluno) {
       this.$router.push({ name: 'BuscaPerfilAluno', params: { id: aluno } })

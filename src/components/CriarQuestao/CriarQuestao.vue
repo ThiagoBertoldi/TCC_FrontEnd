@@ -62,6 +62,10 @@
          </v-card-actions>
       </v-card>
    </v-dialog>
+
+   <v-snackbar v-model="snackbar" :timeout="3000" :color="error ? 'red' : 'green'">
+      {{ messageSnackBar }}
+   </v-snackbar>
 </template>
 
 <script>
@@ -71,7 +75,15 @@ export default {
          model: {},
          typeButton: false,
          show: false,
-         listaRespostas: []
+         listaRespostas: [],
+         snackbar: false,
+         messageSnackBar: null,
+         error: false
+      }
+   },
+   watch: {
+      'error': function (data) {
+         this.snackbar = true
       }
    },
    methods: {
@@ -96,7 +108,7 @@ export default {
 
                   this.show = true;
                })
-               .catch(err => console.log(err))
+               .catch(err => this.$emit('snackbar', err.response.data.data.message, false))
          } else {
             this.show = true
          }
@@ -111,16 +123,13 @@ export default {
       removerResposta(resposta) {
          let indexResposta = this.listaRespostas.indexOf(resposta)
 
-         if(indexResposta > -1)
+         if (indexResposta > -1)
             this.listaRespostas.splice(indexResposta, 1)
       },
       async salvaQuestao() {
          let { descricaoQuestao, moedas, idAula } = this.model
 
          moedas = parseFloat(moedas)
-
-         if (!descricaoQuestao || this.listaRespostas.length <= 1)
-            return
 
          let dto = {
             idAula: idAula ?? null,
@@ -134,14 +143,21 @@ export default {
       },
       criarQuestao(dto) {
          this.$api.post('create-questao', dto)
-            .then(resp => console.log(resp))
-            .catch(err => console.log(err))
+            .then(() => {
+               this.show = false
+               this.$emit('snackbar', 'Questão criada com sucesso!', true)
+            })
+            .catch(err => this.$emit('snackbar', err.response.data.data.message, false))
       },
       salvaExistente(dto) {
          this.$api.post('update-questao', dto)
-            .then(resp => console.log(resp))
-            .catch(err => console.log(err))
+            .then(() => {
+               this.show = false
+               this.$emit('snackbar', 'Questão atualizada com sucesso!', true)
+            })
+            .catch(err => this.$emit('snackbar', err.response.data.data.message, false))
       }
-   }
+   },
+   emits: ['snackbar', 'atualizaPagina']
 }
 </script>

@@ -114,19 +114,12 @@ export default {
 
           this.show = true
         })
-        .catch(err => {
-          this.show = false
-          this.error.message = err.response.data.data.message
-          this.snackbar = true
-
-          setTimeout(() => {
-            this.error.message = null
-          }, 3000);
-        })
+        .catch(err => this.$emit('snackbar', err.response.data.data.message, false))
     }
   },
   components: {
     CardRespostasAluno
-  }
+  },
+  emits: ['snackbar']
 }
 </script>

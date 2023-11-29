@@ -38,7 +38,7 @@ export default {
                this.alunos = response.data.listaAlunos
             }
          })
-         .catch(err => console.log(err))
+         .catch(err => this.$emit('snackbar', err.response.data.data.message, false))
 
          this.show = true;
       },
@@ -49,18 +49,23 @@ export default {
          }
       },
       addAluno() {
-         let idAlunos = this.model.alunos.map(item => { return item._id  })
+         let idAlunos = []
+
+         if(this.model.alunos)
+            idAlunos = this.model.alunos.map(item => { return item._id  })
+
          let dto = {
             idMateria: this.$route.params.id,
             alunos: idAlunos
          }
 
          this.$api.post('adicionar-aluno-materia', dto)
-         .then(response => {
+         .then(() => {
             this.show = false
             this.model = {}
+            this.$emit('snackbar', 'Aluno(s) adicionado(s) com sucesso', true)
          })
-         .catch(err => {})
+         .catch(err => this.$emit('snackbar', err.response.data.data.message, false))
       }
    }
 }
