@@ -15,7 +15,7 @@
                      <v-col cols="3" class="d-flex align-center justify-center">
                         <v-btn color="green" class="flex-grow-1" style="height: 100%;" @click="comprarItem(item)"
                            :disabled="$store.getters.getMoedas < item.moedas">
-                           R$ {{ item.moedas }}
+                           <img src="../../../assets/coin.png" width="25" height="25" class="ma-2" /> {{ item.moedas }}
                         </v-btn>
                      </v-col>
                   </v-row>

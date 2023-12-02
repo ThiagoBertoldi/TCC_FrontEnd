@@ -94,7 +94,7 @@ export default {
                
                setTimeout(() => {
                   this.$router.push('/')
-               }, 3500);
+               }, 2000);
             }
          })
          .catch(err => { this.error = err.data })

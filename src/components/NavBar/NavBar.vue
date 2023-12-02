@@ -80,8 +80,10 @@
          </v-col>
          <v-col cols="2" class="d-flex justify-center" v-if="$router.currentRoute.value.name == 'AulaAluno'">
             <div v-if="$router.currentRoute.value.name == 'AulaAluno' && this.$store.getters.getUser.type == 2"
-               style="color: gold;">
-               Moedas: TROCAR SIMBOLO {{ $store.getters.getMoedas }}
+               style="color: gold;" class="d-flex justify-center align-center tooltip">
+               <img src="../../../src/assets/coin.png" width="25" height="25" class="mr-2"/> {{ $store.getters.getMoedas
+               }}
+               <span class="tooltiptext">Suas Moedas</span>
             </div>
          </v-col>
       </nav>
@@ -238,3 +240,29 @@ export default {
    emits: ['atualizaPagina', 'salvarBoard', 'salvarAula', 'deleteBoard', 'salvaMercado', 'confirmDeleteBoard']
 }
 </script>
+
+<style>
+.tooltip {
+   position: relative;
+   display: inline-block;
+}
+
+.tooltip .tooltiptext {
+   visibility: hidden;
+   width: 120px;
+   background-color: black;
+   color: #fff;
+   text-align: center;
+   border-radius: 6px;
+   padding: 5px 0;
+
+   /* Position the tooltip */
+   position: absolute;
+   z-index: 1;
+   top: 120%;
+}
+
+.tooltip:hover .tooltiptext {
+   visibility: visible;
+}
+</style>
